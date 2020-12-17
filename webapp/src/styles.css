@@ -1,0 +1,35 @@
+/* You can add global styles to this file, and also import other style files */
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    background-image: url('./assets/hairDresserStudio.jpg');
+}
+
+.mat-card {
+    width: 1024px;
+    height: 600px;
+}
+
+.mat-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    height: 64px;
+}
+
+.mat-error {
+    font-size: small;
+}
+
+app-login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}

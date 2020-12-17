@@ -1,0 +1,35 @@
+<mat-toolbar color="primary">
+    <div class="toolbarleftActions">
+        <button mat-icon-button class="example-icon" (click)="drawer.toggle()"
+            aria-label="Example icon-button with menu icon">
+            <mat-icon>menu</mat-icon>
+        </button>
+        <span>Hairdressing studio</span>
+        <span class="example-spacer"></span>
+    </div>
+    <div class="toolbarRightActions">
+        <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+            <mat-icon>favorite</mat-icon>
+        </button>
+        <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
+            <mat-icon>share</mat-icon>
+        </button>
+    </div>
+</mat-toolbar>
+
+
+<mat-drawer-container class="main-container" autosize>
+    <mat-drawer #drawer class="main-sidenav" mode="over">
+        <mat-nav-list>
+            <a mat-list-item [routerLink]="['/admin','services']" (click)="drawer.toggle()"> Services </a>
+            <a mat-list-item [routerLink]="['/admin','services','create']" (click)="drawer.toggle()"> Create Service
+            </a>
+        </mat-nav-list>
+
+    </mat-drawer>
+
+    <div class="main-sidenav-content">
+        <router-outlet></router-outlet>
+    </div>
+
+</mat-drawer-container>

@@ -1,0 +1,69 @@
+*.pyc
+*~
+.directory
+.project
+.pydevproject
+.coverage
+.editorconfig
+*.log
+# *.key
+*.csr
+# *.crt
+.eggs/
+*.egg-info
+celerybeat-schedule
+/build
+/dist
+/docs/build
+/docs/source/*
+!/docs/source/index.rst
+!/docs/source/conf.py
+/static/*
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+webapp/dist
+webapp/tmp
+webapp/.tmp
+webapp/out-tsc
+
+# dependencies
+webapp/node_modules
+node_modules
+
+# IDEs and editors
+/.idea
+/.vscode
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# misc
+webapp/.sass-cache
+webapp/connect.lock
+webapp/coverage
+webapp/libpeerconnection.log
+webapp/npm-debug.log
+webapp/yarn-error.log
+webapp/testem.log
+webapp/typings
+
+# System Files
+.DS_Store
+Thumbs.db
+
+#e2e tests tmp images
+**/e2e/*.png
+
+#unit test coverage folder
+**/coverage/

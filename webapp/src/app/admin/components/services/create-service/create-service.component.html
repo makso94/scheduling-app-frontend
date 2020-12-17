@@ -1,0 +1,52 @@
+<form [formGroup]="form" (ngSubmit)="createService()">
+    <mat-card>
+
+        <mat-card-header>
+            <mat-card-title>Create Service</mat-card-title>
+            <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
+        </mat-card-header>
+
+        <mat-card-content>
+
+            <div class="container">
+                <mat-form-field>
+                    <mat-label>Name</mat-label>
+                    <input type="text" matInput formControlName="name">
+                    <mat-error align="end" *ngIf="form.controls.name.errors?.required">
+                        Name is <strong>required</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Description</mat-label>
+                    <input type="text" matInput formControlName="description">
+                    <mat-error align="end" *ngIf="form.controls.name.errors?.required">
+                        Description is <strong>required</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Price</mat-label>
+                    <input type="number" matInput formControlName="price">
+                    <mat-error align="end" *ngIf="form.controls.name.errors?.required">
+                        Price is <strong>required</strong>
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field>
+                    <mat-label>Duration</mat-label>
+                    <input type="number" matInput formControlName="duration">
+                    <mat-error align="end" *ngIf="form.controls.name.errors?.required">
+                        Duration is <strong>required</strong>
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+        </mat-card-content>
+        <mat-card-actions align="end">
+            <a type="submit" mat-raised-button color="accent" [routerLink]="['../']" routerLinkActive="router-link-active" >Cancel</a>
+
+            <button type="submit" mat-raised-button color="primary" [disabled]="form.invalid">Create</button>
+        </mat-card-actions>
+    </mat-card>
+</form>
