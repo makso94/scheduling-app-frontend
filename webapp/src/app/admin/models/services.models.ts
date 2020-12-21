@@ -1,4 +1,8 @@
 export class ResponseServices {
+    data!: Array<ServiceData>;
+}
+
+export class ResponseService {
     data!: ServiceData;
 }
 
@@ -7,5 +11,7 @@ export class ServiceData {
     name!: string;
     description!: string;
     price!: number;
+    duration!: number;
     mario!: string;
 }
+

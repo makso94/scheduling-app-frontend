@@ -7,10 +7,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material/material.module';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { MinutesToHoursPipe } from './pipes/minutes-to-hours.pipe';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+
   ],
   imports: [
     BrowserModule,
@@ -19,6 +21,7 @@ import { CommonModule } from '@angular/common';
     AppRoutingModule,
     MaterialModule,
   ],
+  exports: [],
   providers: [],
   bootstrap: [AppComponent]
 })

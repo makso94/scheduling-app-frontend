@@ -3,8 +3,7 @@
     <mat-card-header>
         <mat-card-title>Services List</mat-card-title>
         <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
-        <a [routerLink]="['/admin','services','create']" routerLinkActive="router-link-active" mat-mini-fab
-            color="primary">
+        <a [routerLink]="['/admin','services','create']" routerLinkActive="router-link-active" mat-mini-fab color="primary">
             <mat-icon>add_box</mat-icon>
         </a>
 
@@ -38,7 +37,7 @@
             <!-- Duration Column -->
             <ng-container matColumnDef="duration">
                 <th mat-header-cell *matHeaderCellDef> Duration </th>
-                <td mat-cell *matCellDef="let element"> {{element.duration}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.duration | minutesToHours }} </td>
             </ng-container>
 
 
@@ -47,8 +46,12 @@
                 <th mat-header-cell *matHeaderCellDef> Actions </th>
                 <td mat-cell *matCellDef="let element">
                     <!-- {{element.actions}}  -->
-                    <button type="button" mat-raised-button color="warn"
-                        (click)="deleteService(element.id)">Delete</button>
+                    <a mat-icon-button color="primary" [routerLink]="['/admin', 'services', 'edit', element.id]" routerLinkActive="router-link-active">
+                        <mat-icon>edit</mat-icon>
+                    </a>
+                    <button type="button" mat-icon-button color="warn" (click)="deleteService(element.id)">
+                    <mat-icon>delete</mat-icon>
+                    </button>
 
                 </td>
             </ng-container>

@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AdminDashComponent } from './components/admin-dash/admin-dash.component';
+import { AdminServiceComponent } from './components/services/admin-service/admin-service.component';
 import { AdminServicesComponent } from './components/services/admin-services/admin-services.component';
-import { CreateServiceComponent } from './components/services/create-service/create-service.component';
 
 const routes: Routes = [
   {
@@ -15,7 +15,12 @@ const routes: Routes = [
       },
       {
         path: 'services/create',
-        component: CreateServiceComponent
+        component: AdminServiceComponent
+      }
+      ,
+      {
+        path: 'services/edit/:id',
+        component: AdminServiceComponent
       }
     ]
   },

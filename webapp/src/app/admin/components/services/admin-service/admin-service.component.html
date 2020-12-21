@@ -1,9 +1,9 @@
-<form [formGroup]="form" (ngSubmit)="createService()">
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
     <mat-card>
 
         <mat-card-header>
-            <mat-card-title>Create Service</mat-card-title>
-            <!-- <mat-card-subtitle>Dog Breed</mat-card-subtitle> -->
+            <mat-card-title *ngIf="!id">Create Service</mat-card-title>
+            <mat-card-title *ngIf="id">Edit Service</mat-card-title>
         </mat-card-header>
 
         <mat-card-content>
@@ -33,20 +33,33 @@
                     </mat-error>
                 </mat-form-field>
 
+
                 <mat-form-field>
                     <mat-label>Duration</mat-label>
-                    <input type="number" matInput formControlName="duration">
+                    <input type="number" readonly matInput formControlName="duration">
                     <mat-error align="end" *ngIf="form.controls.name.errors?.required">
                         Duration is <strong>required</strong>
                     </mat-error>
                 </mat-form-field>
+
+
+                <mat-chip-list #chipList [multiple]="false" [selectable]="true">
+                    <mat-chip *ngFor="let item of durations" #chip="matChip" (click)="chip.toggleSelected()" [selected]="item.selected" [selectable]="true" (selectionChange)="onChipSelected($event, item)">
+                        {{item.duration | minutesToHours}}
+                    </mat-chip>
+                </mat-chip-list>
+
             </div>
+
 
         </mat-card-content>
         <mat-card-actions align="end">
-            <a type="submit" mat-raised-button color="accent" [routerLink]="['../']" routerLinkActive="router-link-active" >Cancel</a>
+            <a type="submit" mat-raised-button [routerLink]="['/admin','services']" routerLinkActive="router-link-active">Cancel</a>
 
-            <button type="submit" mat-raised-button color="primary" [disabled]="form.invalid">Create</button>
+
+            <button *ngIf="!id" type="submit" mat-raised-button color="primary" [disabled]="form.invalid">Create</button>
+            <button *ngIf="id" type="submit" mat-raised-button color="primary" [disabled]="form.invalid">Update</button>
+
         </mat-card-actions>
     </mat-card>
 </form>

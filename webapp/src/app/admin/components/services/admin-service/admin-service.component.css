@@ -1,0 +1,14 @@
+.container {
+    /* width: 300px; */
+    display: flex;
+    flex-direction: column;
+}
+
+.mat-chip-list {
+    width: 450px;
+}
+
+.mat-chip-list .mat-chip {
+    width: 100px;
+    justify-content: center;
+}

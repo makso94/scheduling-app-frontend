@@ -12,8 +12,8 @@ body {
 }
 
 .mat-card {
-    width: 1024px;
-    height: 600px;
+    min-width: 600px;
+    height: auto;
 }
 
 .mat-card-header {
@@ -32,4 +32,9 @@ app-login {
     justify-content: center;
     align-items: center;
     height: 100%;
+}
+
+.main-sidenav {
+    width: 200px;
+    padding: 20px 0 !important;
 }
