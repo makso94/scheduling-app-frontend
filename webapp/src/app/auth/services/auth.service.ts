@@ -14,4 +14,12 @@ export class AuthService {
   login(user: User): Observable<any> {
     return this.http.put(`${API}/session`, user);
   }
+  
+  logout(): Observable<any> {
+    return this.http.delete(`${API}/session`);
+  }
+
+  loginCheck(): Observable<any> {
+    return this.http.get(`${API}/session`);
+  }
 }

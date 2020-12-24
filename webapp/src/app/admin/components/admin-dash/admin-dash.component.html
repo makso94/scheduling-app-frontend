@@ -1,18 +1,15 @@
 <mat-toolbar color="primary">
     <div class="toolbarleftActions">
-        <button mat-icon-button class="example-icon" (click)="drawer.toggle()"
-            aria-label="Example icon-button with menu icon">
+        <button mat-icon-button class="example-icon" (click)="drawer.toggle()" aria-label="Example icon-button with menu icon">
             <mat-icon>menu</mat-icon>
         </button>
         <span>Hairdressing studio</span>
         <span class="example-spacer"></span>
     </div>
     <div class="toolbarRightActions">
-        <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
-            <mat-icon>favorite</mat-icon>
-        </button>
-        <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
-            <mat-icon>share</mat-icon>
+        <button mat-button type="button" (click)="logout()">
+            <mat-icon>account_circle</mat-icon>
+            Logout
         </button>
     </div>
 </mat-toolbar>
