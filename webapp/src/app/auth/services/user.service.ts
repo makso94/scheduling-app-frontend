@@ -7,21 +7,12 @@ import { User } from '../models/user.model';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  login(user: User): Observable<any> {
-    return this.http.put(`${API}/session`, user);
+
+  create(user: User): Observable<any> {
+    return this.http.post(`${API}/users`, user);
   }
-
-  logout(): Observable<any> {
-    return this.http.delete(`${API}/session`);
-  }
-
-  loginCheck(): Observable<any> {
-    return this.http.get(`${API}/session`);
-  }
-
-
 }

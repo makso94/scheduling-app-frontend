@@ -1,0 +1,38 @@
+mat-card {
+    max-width: 480px;
+    height: auto;
+}
+
+mat-card mat-card-content mat-form-field {
+    margin: 20px 0;
+    width: 100%;
+}
+
+.flexRow {
+    display: flex;
+}
+
+.flexRow .mat-form-field {
+    width: calc(50%);
+}
+
+.flexRow .mat-form-field:first-child {
+    margin-right: 16px;
+}
+
+mat-card-title {
+    display: flex;
+    align-items: center;
+}
+
+mat-card-title h1 {
+    margin: 0;
+}
+
+mat-card-title button {
+    margin-right: 8px;
+}
+
+::ng-deep .mat-card-header-text {
+    margin: 0 !important;
+}

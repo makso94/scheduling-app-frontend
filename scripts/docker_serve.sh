@@ -14,24 +14,27 @@ if [ -f "$LOCK_FILE" ]; then
    exit
 fi
 
-if [ $1'x' == 'x' ]; then
-	echo "Please provide one argument -> the name of the application you want to serve"
-	exit 1
-fi
+# if [ $1'x' == 'x' ]; then
+# 	echo "Please provide one argument -> the name of the application you want to serve"
+# 	exit 1
+# fi
 
 trap "rm -f $LOCK_FILE" EXIT
 touch $LOCK_FILE
 
 # scripts
-IMIN="$( cd "$( dirname "$0" )" && pwd )"
+IMIN="$(cd "$(dirname "$0")" && pwd)"
 
 # --- Body --------------------------------------------------------
-HERE=`pwd`
+HERE=$(pwd)
 SRC="$(dirname "$IMIN")"
 
 cd $SRC/webapp
-echo "Serving" $1
-ng serve --live-reload=false --host=0.0.0.0 $1
-            
+# echo "Serving" $1
+echo "Serving Scheduling webApp"
+
+# ng serve --live-reload=false --host=0.0.0.0 $1
+ng serve --live-reload=true --host=0.0.0.0
+
 cd $HERE
 exit 0

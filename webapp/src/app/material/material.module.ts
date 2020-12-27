@@ -10,8 +10,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {MatChipsModule} from '@angular/material/chips';
-import {MatGridListModule} from '@angular/material/grid-list';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSelectModule } from '@angular/material/select';
 
 
 const materialModules = [
@@ -28,7 +30,9 @@ const materialModules = [
   MatSidenavModule,
   MatListModule,
   MatChipsModule,
-  MatGridListModule
+  MatGridListModule,
+  MatCheckboxModule,
+  MatSelectModule
 ];
 
 @NgModule({

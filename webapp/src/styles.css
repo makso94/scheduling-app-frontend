@@ -27,7 +27,7 @@ body {
     font-size: small;
 }
 
-app-login {
+app-auth {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -37,4 +37,12 @@ app-login {
 .main-sidenav {
     width: 200px;
     padding: 20px 0 !important;
+}
+
+.mat-card-actions {
+    text-align: center;
+}
+
+.formSubmitBtn {
+    width: 100%;
 }
