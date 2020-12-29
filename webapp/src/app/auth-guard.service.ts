@@ -15,7 +15,7 @@ export class AuthGuardService implements CanActivateChild {
   canActivateChild(): Observable<boolean> {
     return this.authService.loginCheck().pipe(
       map((res) => {
-        console.log(res);
+        // console.log(res);
         return true;
       }),
       catchError(() => {
