@@ -14,6 +14,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
+import {MatBadgeModule} from '@angular/material/badge';
 
 
 const materialModules = [
@@ -32,7 +33,8 @@ const materialModules = [
   MatChipsModule,
   MatGridListModule,
   MatCheckboxModule,
-  MatSelectModule
+  MatSelectModule,
+  MatBadgeModule
 ];
 
 @NgModule({

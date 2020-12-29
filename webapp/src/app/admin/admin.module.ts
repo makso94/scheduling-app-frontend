@@ -7,10 +7,11 @@ import { MaterialModule } from '../material/material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AdminServiceComponent } from './components/services/admin-service/admin-service.component';
 import { MinutesToHoursPipe } from '../pipes/minutes-to-hours.pipe';
+import { UsersComponent } from './components/users/users.component';
 
 
 @NgModule({
-  declarations: [AdminDashComponent, AdminServicesComponent, AdminServiceComponent, MinutesToHoursPipe],
+  declarations: [AdminDashComponent, AdminServicesComponent, AdminServiceComponent, MinutesToHoursPipe, UsersComponent],
   imports: [
     CommonModule,
     AdminRoutingModule,

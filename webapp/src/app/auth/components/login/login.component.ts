@@ -42,20 +42,27 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const user = new User();
-    user.email = this.form.get('email')?.value;
-    user.password = this.form.get('password')?.value;
+    if (this.form.valid) {
+      const user = new User();
+      user.email = this.form.get('email')?.value;
+      user.password = this.form.get('password')?.value;
 
-    this.authService.login(user).subscribe(res => {
-      console.log(res);
-      if (!!res.user.is_admin) {
-        this.router.navigate(['/admin']);
-      }
-      else {
-        this.router.navigate(['/appointment']);
-      }
+      this.authService.login(user).subscribe(res => {
+        console.log(res);
+        if (!!res.user.is_admin) {
 
-    });
+          console.log('admin e');
+          
+          this.router.navigate(['/admin']);
+        }
+        else {
+          console.log('ne e admin');
+
+          this.router.navigate(['/appointment']);
+        }
+
+      });
+    }
 
   }
 

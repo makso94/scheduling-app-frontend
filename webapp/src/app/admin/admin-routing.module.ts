@@ -3,12 +3,18 @@ import { Routes, RouterModule } from '@angular/router';
 import { AdminDashComponent } from './components/admin-dash/admin-dash.component';
 import { AdminServiceComponent } from './components/services/admin-service/admin-service.component';
 import { AdminServicesComponent } from './components/services/admin-services/admin-services.component';
+import { UsersComponent } from './components/users/users.component';
 
 const routes: Routes = [
   {
     path: '',
     component: AdminDashComponent,
     children: [
+
+      {
+        path: 'users',
+        component: UsersComponent
+      },
       {
         path: 'services',
         component: AdminServicesComponent,
@@ -21,7 +27,8 @@ const routes: Routes = [
       {
         path: 'services/edit/:id',
         component: AdminServiceComponent
-      }
+      },
+
     ]
   },
 

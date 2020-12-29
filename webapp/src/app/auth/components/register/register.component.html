@@ -59,9 +59,9 @@
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
-                    <mat-label>Confirm</mat-label>
-                    <input matInput placeholder="Enter your password" [type]="hideConfirm ? 'password' : 'text'" formControlName="confirm_password" tabindex="5" required>
-                    <button mat-icon-button matSuffix (click)="hideConfirm = !hideConfirm" [attr.aria-label]="'Hide password'" tabindex="-1" [attr.aria-pressed]="hideConfirm">
+                    <mat-label>Confirm Password</mat-label>
+                    <input matInput placeholder="Confirm your password" [type]="hideConfirm ? 'password' : 'text'" formControlName="confirm_password" tabindex="5" required>
+                    <button mat-icon-button matSuffix (click)="hideConfirm = !hideConfirm" [attr.aria-label]="'Hide password'" tabindex="-2" [attr.aria-pressed]="hideConfirm">
                         <mat-icon>{{hideConfirm ? 'visibility' : 'visibility_off' }}</mat-icon>
                     </button>
                     <mat-error *ngIf="form.controls.confirm_password.errors?.required">
@@ -78,7 +78,8 @@
             </mat-checkbox>
 
             <mat-card-actions>
-                <button class="formSubmitBtn" type="submit" mat-raised-button color="primary">Create Account</button>
+                <button class="formSubmitBtn" type="submit" mat-raised-button color="primary" tabindex="7">Create
+                    Account</button>
             </mat-card-actions>
         </form>
     </mat-card-content>

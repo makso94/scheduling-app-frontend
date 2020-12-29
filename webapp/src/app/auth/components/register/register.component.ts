@@ -31,14 +31,11 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService,
     private router: Router,
     private userService: UserService
   ) { }
 
-  ngOnInit(): void {
-    this.form.valueChanges.subscribe(console.log);
-  }
+  ngOnInit(): void { }
 
   onSubmit(): void {
     if (this.form.valid) {
