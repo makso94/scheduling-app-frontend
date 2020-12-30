@@ -8,10 +8,12 @@ import { MaterialModule } from './material/material.module';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { MinutesToHoursPipe } from './pipes/minutes-to-hours.pipe';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    PageNotFoundComponent,
 
   ],
   imports: [

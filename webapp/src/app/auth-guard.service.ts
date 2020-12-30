@@ -15,7 +15,14 @@ export class AuthGuardService implements CanActivateChild {
   canActivateChild(): Observable<boolean> {
     return this.authService.loginCheck().pipe(
       map((res) => {
-        // console.log(res);
+        if (!res.approved_at) {
+          this.authService.logout().subscribe(() => {
+            this.router.navigate(['pageNotFound']);
+            return false;
+          }
+          );
+        }
+        console.log('ulazam i tuj ');
         return true;
       }),
       catchError(() => {

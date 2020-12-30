@@ -1,6 +1,7 @@
 <mat-toolbar color="primary">
     <div class="toolbarleftActions">
-        <button mat-icon-button class="example-icon" (click)="drawer.toggle()" aria-label="Example icon-button with menu icon">
+        <button mat-icon-button class="example-icon" (click)="drawer.toggle()"
+            aria-label="Example icon-button with menu icon">
             <mat-icon>menu</mat-icon>
         </button>
         <span>Hairdressing studio</span>
@@ -18,9 +19,9 @@
 <mat-drawer-container class="main-container" autosize>
     <mat-drawer #drawer class="main-sidenav" mode="over">
         <mat-nav-list>
+            <a mat-list-item [routerLink]="['/admin','users']" (click)="drawer.toggle()"> Users </a>
             <a mat-list-item [routerLink]="['/admin','services']" (click)="drawer.toggle()"> Services </a>
-            <a mat-list-item [routerLink]="['/admin','services','create']" (click)="drawer.toggle()"> Create Service
-            </a>
+            <a mat-list-item [routerLink]="['/admin','services','create']" (click)="drawer.toggle()"> Create Service</a>
         </mat-nav-list>
 
     </mat-drawer>

@@ -16,7 +16,7 @@ export class UserService {
     let params = new HttpParams();
     if (filter) {
       for (const key in filter) {
-        if (key) {
+        if (filter[key]) {
           params = params.append(key, filter[key]);
         }
       }

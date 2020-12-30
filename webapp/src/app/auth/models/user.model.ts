@@ -12,7 +12,7 @@ export class User {
     is_admin: number | undefined;
     created_at: any;
     updated_at: any;
-    verified_at: any;
+    approved_at: any;
     deactived_at: any;
 }
 
