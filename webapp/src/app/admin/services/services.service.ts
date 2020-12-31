@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API } from 'src/app/constants';
@@ -13,7 +13,9 @@ export class ServicesService {
 
 
   getAll(): Observable<ResponseServices> {
-    return this.http.get<ResponseServices>(`${API}/services`);
+    const headers = new HttpHeaders()
+      .set('X-Toastr-Meta', JSON.stringify({ exclude: [200] }))
+    return this.http.get<ResponseServices>(`${API}/services`, { headers });
   }
 
   delete(id: number): Observable<any> {

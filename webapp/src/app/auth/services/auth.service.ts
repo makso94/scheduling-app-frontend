@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { API } from 'src/app/constants';
@@ -20,7 +20,9 @@ export class AuthService {
   }
 
   loginCheck(): Observable<User> {
-    return this.http.get<User>(`${API}/session`);
+    const headers = new HttpHeaders()
+      .set('X-Toastr-Meta', JSON.stringify({ exclude: [200,403] }))
+    return this.http.get<User>(`${API}/session`, { headers });
   }
 
 

@@ -11,7 +11,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "~11.0.4",
+    "@angular/animations": "^11.0.5",
     "@angular/cdk": "^11.0.2",
     "@angular/common": "~11.0.4",
     "@angular/compiler": "~11.0.4",
@@ -22,8 +22,10 @@
     "@angular/platform-browser-dynamic": "~11.0.4",
     "@angular/router": "~11.0.4",
     "lodash": "^4.17.20",
+    "ngx-toastr": "^13.2.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
+    "uuid": "^8.3.2",
     "webpack-dev-server": "^3.11.0",
     "zone.js": "~0.10.2"
   },
@@ -34,6 +36,7 @@
     "@types/jasmine": "~3.6.0",
     "@types/lodash": "^4.14.166",
     "@types/node": "^12.11.1",
+    "@types/uuid": "^8.3.0",
     "codelyzer": "^6.0.0",
     "jasmine-core": "~3.6.0",
     "jasmine-spec-reporter": "~5.0.0",
