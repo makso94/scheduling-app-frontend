@@ -21,7 +21,7 @@ export class AuthService {
 
   loginCheck(): Observable<User> {
     const headers = new HttpHeaders()
-      .set('X-Toastr-Meta', JSON.stringify({ exclude: [200,403] }))
+      .set('X-Toastr-Meta', JSON.stringify({ exclude: [200, 403] }));
     return this.http.get<User>(`${API}/session`, { headers });
   }
 

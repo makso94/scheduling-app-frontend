@@ -9,7 +9,7 @@
         <mat-card-content>
 
             <div class="container">
-                <mat-form-field>
+                <mat-form-field appearance="outline">
                     <mat-label>Name</mat-label>
                     <input type="text" matInput formControlName="name">
                     <mat-error align="end" *ngIf="form.controls.name.errors?.required">
@@ -17,7 +17,7 @@
                     </mat-error>
                 </mat-form-field>
 
-                <mat-form-field>
+                <mat-form-field appearance="outline">
                     <mat-label>Description</mat-label>
                     <input type="text" matInput formControlName="description">
                     <mat-error align="end" *ngIf="form.controls.name.errors?.required">
@@ -25,7 +25,7 @@
                     </mat-error>
                 </mat-form-field>
 
-                <mat-form-field>
+                <mat-form-field appearance="outline">
                     <mat-label>Price</mat-label>
                     <input type="number" matInput formControlName="price">
                     <mat-error align="end" *ngIf="form.controls.name.errors?.required">
@@ -34,7 +34,7 @@
                 </mat-form-field>
 
 
-                <mat-form-field>
+                <mat-form-field appearance="outline">
                     <mat-label>Duration</mat-label>
                     <input type="number" readonly matInput formControlName="duration">
                     <mat-error align="end" *ngIf="form.controls.name.errors?.required">

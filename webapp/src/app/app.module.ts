@@ -11,6 +11,8 @@ import { MinutesToHoursPipe } from './pipes/minutes-to-hours.pipe';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 import { ToastrModule } from 'ngx-toastr';
 import { ToastrInterceptorService } from './interceptors/toastr/toastr-interceptor.service';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 @NgModule({
   declarations: [
