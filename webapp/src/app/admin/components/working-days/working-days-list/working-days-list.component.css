@@ -10,3 +10,8 @@ pre {
     background-color: #f5f5f5;
     padding: 15px;
 }
+
+.cal-day-selected,
+.cal-day-selected:hover {
+    background-color: deeppink !important;
+}

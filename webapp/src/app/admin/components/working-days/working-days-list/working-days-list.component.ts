@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ViewChild, TemplateRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ViewChild, TemplateRef, Component, OnInit, ViewEncapsulation } from '@angular/core';
 import {
   startOfDay,
   endOfDay,
@@ -16,6 +16,7 @@ import {
   CalendarEvent,
   CalendarEventAction,
   CalendarEventTimesChangedEvent,
+  CalendarMonthViewDay,
   CalendarView,
 } from 'angular-calendar';
 import { roundToNearest } from 'angular-calendar/modules/common/util';
@@ -40,7 +41,7 @@ const colors: any = {
 @Component({
   selector: 'app-working-days-list',
   templateUrl: './working-days-list.component.html',
-  styleUrls: ['./working-days-list.component.css']
+  styleUrls: ['./working-days-list.component.css'],
 })
 export class WorkingDaysListComponent implements OnInit {
 
@@ -140,6 +141,8 @@ export class WorkingDaysListComponent implements OnInit {
   ];
 
   activeDayIsOpen = true;
+  selectedDays: any = [];
+  selectedMonthViewDay!: CalendarMonthViewDay;
 
 
   ngOnInit(): void {
@@ -149,7 +152,10 @@ export class WorkingDaysListComponent implements OnInit {
 
   }
 
+
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
+    console.log(date);
+
     if (isSameMonth(date, this.viewDate)) {
       if (
         (isSameDay(this.viewDate, date) && this.activeDayIsOpen === true) ||
@@ -162,6 +168,7 @@ export class WorkingDaysListComponent implements OnInit {
       this.viewDate = date;
     }
   }
+
 
   eventTimesChanged({
     event,

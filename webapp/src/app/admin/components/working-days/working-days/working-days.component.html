@@ -5,7 +5,61 @@
     </mat-card-header>
     <mat-card-content>
 
+        <section class="monthActions">
+
+            <div>
+                <button type="button" mat-raised-button color="primary" mwlCalendarPreviousView [view]="view"
+                    [(viewDate)]="viewDate" (viewDateChange)="onViewDateChange()">
+                    Previous
+                </button>
+                <button type="button" mat-stroked-button color="primary" mwlCalendarToday [(viewDate)]="viewDate"
+                    (viewDateChange)="onViewDateChange()">
+                    Today
+                </button>
+                <button type="button" mat-raised-button color="primary" mwlCalendarNextView [view]="view"
+                    [(viewDate)]="viewDate" (viewDateChange)="onViewDateChange()">
+                    Next
+                </button>
+            </div>
+
+            <h2>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h2>
+
+        </section>
+
+
+
+        <section class="workTimeSection">
+            <h2>Work time </h2>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Open at</mat-label>
+                <input matInput [format]="24" [ngxTimepicker]="openAt" [formControl]="openAtControl" readonly>
+                <ngx-material-timepicker #openAt [minutesGap]="15">
+                </ngx-material-timepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Close at</mat-label>
+                <input matInput [format]="24" [ngxTimepicker]="closeAt" [formControl]="closeAtControl" readonly>
+                <ngx-material-timepicker #closeAt [minutesGap]="15">
+                </ngx-material-timepicker>
+            </mat-form-field>
+
+
+            <button mat-stroked-button color="primary" type="button" (click)="selectWholeMonth()">Select Whole
+                Month</button>
+            <button mat-stroked-button type="button" (click)="deselectWholeMonth()">Deselect Whole
+                Month</button>
+
+        </section>
+
+
+
+        <mwl-calendar-month-view [viewDate]="viewDate" [events]="events" [weekStartsOn]="1" [refresh]="refresh"
+            (beforeViewRender)="beforeMonthViewRender($event)" (dayClicked)="dayClicked($event.day)">
+        </mwl-calendar-month-view>
     </mat-card-content>
     <mat-card-actions>
+        <button type="submit" mat-raised-button color="primary" (click)="submit()" [disabled]="false">Submit</button>
     </mat-card-actions>
 </mat-card>

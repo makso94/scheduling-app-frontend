@@ -1,0 +1,22 @@
+.cal-day-selected,
+.cal-day-selected:hover {
+    background-color: rgba(40, 167, 69, 0.5) !important;
+}
+
+.cal-day-not-selected,
+.cal-day-not-selected:hover {
+    background-color: rgba(220, 53, 69, 0.5) !important;
+}
+
+.mat-card {
+    width: 100vh;
+}
+
+.monthActions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.workTimeSection>* {
+    margin-right: 16px;
+}
