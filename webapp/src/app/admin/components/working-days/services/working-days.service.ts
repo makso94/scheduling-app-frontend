@@ -25,4 +25,8 @@ export class WorkingDaysService {
 
     return this.http.get(`${API}/working-days`, { headers, params });
   }
+
+  update(id: number, data: any): Observable<any> {
+    return this.http.put(`${API}/working-days/${id}`, data);
+  }
 }

@@ -1,0 +1,42 @@
+<ng-container *ngIf="haveAppointments">
+    <h2> You can not edit because there are scheduled appointments for this day.</h2>
+</ng-container>
+
+<ng-container *ngIf="!haveAppointments">
+    <h1 *ngIf="!editMode" mat-dialog-title>Create {{data.createWorkingDay}} as Working Day</h1>
+    <h1 *ngIf="editMode" mat-dialog-title>Update </h1>
+
+    <mat-dialog-content>
+
+        <section class="workTimeSection">
+            <h3>Work time </h3>
+            <form [formGroup]="form">
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Open at</mat-label>
+                    <input matInput [format]="24" [ngxTimepicker]="openAt" formControlName="openAtControl" readonly>
+                    <ngx-material-timepicker #openAt [minutesGap]="15">
+                    </ngx-material-timepicker>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Close at</mat-label>
+                    <input matInput [format]="24" [ngxTimepicker]="closeAt" formControlName="closeAtControl" readonly>
+                    <ngx-material-timepicker #closeAt [minutesGap]="15">
+                    </ngx-material-timepicker>
+                </mat-form-field>
+
+            </form>
+
+        </section>
+
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-stroked-button mat-dialog-close>Cancel</button>
+        <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
+        <button mat-stroked-button color="primary" [disabled]="form.invalid" [mat-dialog-close]="form.value">
+            <span *ngIf="!editMode">Create</span>
+            <span *ngIf="editMode">Update</span>
+        </button>
+    </mat-dialog-actions>
+</ng-container>

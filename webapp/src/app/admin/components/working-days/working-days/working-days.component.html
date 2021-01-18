@@ -8,16 +8,13 @@
         <section class="monthActions">
 
             <div>
-                <button type="button" mat-raised-button color="primary" mwlCalendarPreviousView [view]="view"
-                    [(viewDate)]="viewDate" (viewDateChange)="onViewDateChange()">
+                <button type="button" mat-raised-button color="primary" mwlCalendarPreviousView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="onViewDateChange()">
                     Previous
                 </button>
-                <button type="button" mat-stroked-button color="primary" mwlCalendarToday [(viewDate)]="viewDate"
-                    (viewDateChange)="onViewDateChange()">
+                <button type="button" mat-stroked-button color="primary" mwlCalendarToday [(viewDate)]="viewDate" (viewDateChange)="onViewDateChange()">
                     Today
                 </button>
-                <button type="button" mat-raised-button color="primary" mwlCalendarNextView [view]="view"
-                    [(viewDate)]="viewDate" (viewDateChange)="onViewDateChange()">
+                <button type="button" mat-raised-button color="primary" mwlCalendarNextView [view]="view" [(viewDate)]="viewDate" (viewDateChange)="onViewDateChange()">
                     Next
                 </button>
             </div>
@@ -28,7 +25,7 @@
 
 
 
-        <section class="workTimeSection">
+        <section *ngIf="createMode" class="workTimeSection">
             <h2>Work time </h2>
 
             <mat-form-field appearance="outline">
@@ -55,11 +52,10 @@
 
 
 
-        <mwl-calendar-month-view [viewDate]="viewDate" [events]="events" [weekStartsOn]="1" [refresh]="refresh"
-            (beforeViewRender)="beforeMonthViewRender($event)" (dayClicked)="dayClicked($event.day)">
+        <mwl-calendar-month-view [viewDate]="viewDate" [events]="events" [weekStartsOn]="1" [refresh]="refresh" (beforeViewRender)="beforeMonthViewRender($event)" (dayClicked)="dayClicked($event.day)">
         </mwl-calendar-month-view>
     </mat-card-content>
     <mat-card-actions>
-        <button type="submit" mat-raised-button color="primary" (click)="submit()" [disabled]="false">Submit</button>
+        <button *ngIf="createMode" type="submit" mat-raised-button color="primary" (click)="submit()" [disabled]="false">Create Month</button>
     </mat-card-actions>
 </mat-card>

@@ -11,6 +11,7 @@ import { WorkingDaysListComponent } from './components/working-days/working-days
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { WorkingDaysComponent } from './components/working-days/working-days/working-days.component';
+import { EditWorkingDayDialogComponent } from './components/working-days/edit-working-day-dialog/edit-working-day-dialog.component';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { WorkingDaysComponent } from './components/working-days/working-days/wor
     MinutesToHoursPipe,
     UsersComponent,
     WorkingDaysListComponent,
-    WorkingDaysComponent
+    WorkingDaysComponent,
+    EditWorkingDayDialogComponent
   ],
   imports: [
     CommonModule,

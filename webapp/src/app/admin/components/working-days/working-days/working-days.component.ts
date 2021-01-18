@@ -1,9 +1,12 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { CalendarView, CalendarMonthViewDay, CalendarEvent } from 'angular-calendar';
-import { getDaysInMonth, startOfDay } from 'date-fns';
+import { format, getDaysInMonth, startOfDay } from 'date-fns';
 import { sortBy } from 'lodash';
 import { Subject } from 'rxjs';
+import { AppointmentsService } from 'src/app/services/appointments.service';
+import { EditWorkingDayDialogComponent } from '../edit-working-day-dialog/edit-working-day-dialog.component';
 import { RequestWorkingDays } from '../models/working-days-model';
 import { WorkingDaysService } from '../services/working-days.service';
 
@@ -25,9 +28,13 @@ export class WorkingDaysComponent implements OnInit {
   refresh: Subject<any> = new Subject();
   events: CalendarEvent[] = [];
   selectedDays: Array<any> = [];
+  createMode = false;
+  workingDaysData: Array<any> = [];
 
   constructor(
-    private workingDaysService: WorkingDaysService
+    private workingDaysService: WorkingDaysService,
+    private dialog: MatDialog,
+    private appointmentsService: AppointmentsService
   ) { }
 
   ngOnInit(): void {
@@ -39,6 +46,12 @@ export class WorkingDaysComponent implements OnInit {
   getMonthYearData(): void {
     this.workingDaysService.get(this.year, this.month).subscribe(
       res => {
+        if (res?.data.length === 0) {
+          this.createMode = true;
+          return;
+        }
+        this.createMode = false;
+        this.workingDaysData = res.data;
         console.log(res);
         res.data.forEach((element: any) => {
           this.selectedDays.push({
@@ -52,25 +65,84 @@ export class WorkingDaysComponent implements OnInit {
   }
 
   dayClicked(day: CalendarMonthViewDay): void {
-    if (day.date.getMonth() === this.viewDate.getMonth()) {
-      this.selectedMonthViewDay = day;
-      const selectedDateTime = this.selectedMonthViewDay.date.getTime();
-
-      const dateIndex = this.selectedDays.findIndex(
-        (selectedDay: any) => selectedDay.date.getTime() === selectedDateTime
-      );
-      if (dateIndex > -1) {
-        delete this.selectedMonthViewDay.cssClass;
-        this.selectedDays.splice(dateIndex, 1);
-        day.cssClass = 'cal-day-not-selected';
-
-      } else {
-
-        this.selectedDays.push(this.selectedMonthViewDay);
-        console.log(this.selectedDays);
-        day.cssClass = 'cal-day-selected';
+    if (this.createMode) {
+      if (day.date.getMonth() === this.viewDate.getMonth()) {
         this.selectedMonthViewDay = day;
+        const selectedDateTime = this.selectedMonthViewDay.date.getTime();
+
+        const dateIndex = this.selectedDays.findIndex(
+          (selectedDay: any) => selectedDay.date.getTime() === selectedDateTime
+        );
+        if (dateIndex > -1) {
+          delete this.selectedMonthViewDay.cssClass;
+          this.selectedDays.splice(dateIndex, 1);
+          day.cssClass = 'cal-day-not-selected';
+
+        } else {
+
+          this.selectedDays.push(this.selectedMonthViewDay);
+          console.log(this.selectedDays);
+          day.cssClass = 'cal-day-selected';
+          this.selectedMonthViewDay = day;
+        }
       }
+    } else if (day.date.getMonth() === this.viewDate.getMonth()) {
+      const extractedDate = format(day.date, 'yyyy-MM-dd');
+      const findedDay = this.workingDaysData.filter(el => el.date === extractedDate)[0];
+
+      if (!!findedDay) {
+        {
+          this.appointmentsService.getByWorkingDayId(findedDay.id).subscribe(
+            res => {
+              this.dialog.open(EditWorkingDayDialogComponent, {
+                width: '600px',
+                data: { day: findedDay, appointments: res.data }
+              }).afterClosed().subscribe(updateDialogRes => {
+                if (updateDialogRes) {
+                  this.workingDaysService.update(findedDay.id, {
+                    opens: updateDialogRes.openAtControl,
+                    closes: updateDialogRes.closeAtControl
+                  }).subscribe(() => {
+                    this.getMonthYearData();
+                  });
+                }
+
+              });
+
+            }
+          );
+        }
+      }
+      else {
+        // creates working day
+        this.dialog.open(EditWorkingDayDialogComponent, {
+          width: '600px',
+          data: { createWorkingDay: extractedDate }
+        }).afterClosed().subscribe(res => {
+          if (!!res) {
+            console.log(res);
+            const req = new RequestWorkingDays();
+            req.year = this.year;
+            req.month = this.month;
+            req.opens = res.openAtControl;
+            req.closes = res.closeAtControl;
+            req.days.push(day.date.getDate());
+
+            this.workingDaysService.create(req).subscribe(
+              () => {
+                // refreshes calendar after created new working day
+                this.getMonthYearData();
+              }
+            );
+          }
+
+        });
+      }
+
+
+
+
+
     }
 
   }
@@ -134,9 +206,13 @@ export class WorkingDaysComponent implements OnInit {
     this.selectedDays.forEach(day => {
       req.days.push(day.date.getDate());
     });
-
     console.log(req);
-    this.workingDaysService.create(req).subscribe();
+
+    this.workingDaysService.create(req).subscribe(
+      () => {
+        this.createMode = false;
+      }
+    );
 
   }
 
