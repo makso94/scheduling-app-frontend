@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { API } from 'src/app/constants';
 import { User } from '../models/user.model';
 
@@ -16,7 +17,13 @@ export class AuthService {
   }
 
   logout(): Observable<any> {
-    return this.http.delete(`${API}/session`);
+    return this.http.delete(`${API}/session`)
+      .pipe(
+        // removes logged in user
+        tap(() => {
+          localStorage.removeItem('active_user');
+        })
+      );
   }
 
   loginCheck(): Observable<User> {

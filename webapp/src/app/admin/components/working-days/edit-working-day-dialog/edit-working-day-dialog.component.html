@@ -4,31 +4,40 @@
 
 <ng-container *ngIf="!haveAppointments">
     <h1 *ngIf="!editMode" mat-dialog-title>Create {{data.createWorkingDay}} as Working Day</h1>
-    <h1 *ngIf="editMode" mat-dialog-title>Update </h1>
+    <h1 *ngIf="editMode" mat-dialog-title>Update {{data.day?.date}} </h1>
 
     <mat-dialog-content>
 
-        <section class="workTimeSection">
-            <h3>Work time </h3>
-            <form [formGroup]="form">
+        <form [formGroup]="form">
+            <section class="workTimeSection">
+                <h3>Work time </h3>
 
                 <mat-form-field appearance="outline">
                     <mat-label>Open at</mat-label>
-                    <input matInput [format]="24" [ngxTimepicker]="openAt" formControlName="openAtControl" readonly>
+                    <input matInput [format]="24" [ngxTimepicker]="openAt" formControlName="opens" readonly>
                     <ngx-material-timepicker #openAt [minutesGap]="15">
                     </ngx-material-timepicker>
+                    <mat-error *ngIf="form.controls.opens.errors?.required && (form.dirty || form.touched)">
+                        Field is required
+                    </mat-error>
                 </mat-form-field>
 
                 <mat-form-field appearance="outline">
                     <mat-label>Close at</mat-label>
-                    <input matInput [format]="24" [ngxTimepicker]="closeAt" formControlName="closeAtControl" readonly>
+                    <input matInput [format]="24" [ngxTimepicker]="closeAt" formControlName="closes" readonly>
                     <ngx-material-timepicker #closeAt [minutesGap]="15">
                     </ngx-material-timepicker>
+                    <mat-error *ngIf="form.controls.closes.errors?.required && (form.dirty || form.touched)">
+                        Field is required
+                    </mat-error>
                 </mat-form-field>
 
-            </form>
+                <mat-error *ngIf="form.errors?.compareDateTime && (form.touched || form.dirty)">
+                    Close at must be greather than open at
+                </mat-error>
 
-        </section>
+            </section>
+        </form>
 
     </mat-dialog-content>
     <mat-dialog-actions align="end">

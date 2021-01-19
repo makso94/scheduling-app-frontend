@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { format } from 'date-fns';
 import { AppointmentsService } from 'src/app/services/appointments.service';
+import { compareDateTime } from 'src/app/validators/form-validators';
 
 @Component({
   selector: 'app-edit-working-day-dialog',
@@ -20,16 +21,19 @@ export class EditWorkingDayDialogComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    console.log(this.data);
+
     this.form = this.fb.group({
-      openAtControl: ['', Validators.required],
-      closeAtControl: ['', Validators.required]
+      opens: ['', Validators.required],
+      closes: ['', Validators.required]
+    }, {
+      validators: compareDateTime
     });
 
     if (this.data.createWorkingDay) {
       this.editMode = false;
       return;
     }
-    console.log(this.data);
     if (this.data.day && this.data.appointments) {
       if (this.data.appointments.length > 0) {
         this.haveAppointments = true;
@@ -38,8 +42,8 @@ export class EditWorkingDayDialogComponent implements OnInit {
 
       // edit mode
 
-      this.form.get('openAtControl')?.setValue(format(new Date(this.data.day.opens), 'HH:mm'));
-      this.form.get('closeAtControl')?.setValue(format(new Date(this.data.day.closes), 'HH:mm'));
+      this.form.get('opens')?.setValue(format(new Date(this.data.day.opens), 'HH:mm'));
+      this.form.get('closes')?.setValue(format(new Date(this.data.day.closes), 'HH:mm'));
 
     }
 

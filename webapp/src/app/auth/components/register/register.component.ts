@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ConfirmValidator } from 'src/app/customValidators/confirm-validator';
-import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
 
 @Component({
@@ -15,6 +14,7 @@ import { UserService } from '../../services/user.service';
 export class RegisterComponent implements OnInit {
   hide = true;
   hideConfirm = true;
+  canCreateNewAdmin = false;
 
   form: FormGroup = this.fb.group({
     first_name: ['', [Validators.required, Validators.maxLength(32)]],
@@ -35,7 +35,12 @@ export class RegisterComponent implements OnInit {
     private userService: UserService
   ) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    console.log(localStorage.getItem('active_user'));
+    JSON.parse(localStorage.getItem('active_user') || '{}')?.is_admin ?
+      this.canCreateNewAdmin = true :
+      this.canCreateNewAdmin = false;
+  }
 
   onSubmit(): void {
     if (this.form.valid) {

@@ -100,8 +100,8 @@ export class WorkingDaysComponent implements OnInit {
               }).afterClosed().subscribe(updateDialogRes => {
                 if (updateDialogRes) {
                   this.workingDaysService.update(findedDay.id, {
-                    opens: updateDialogRes.openAtControl,
-                    closes: updateDialogRes.closeAtControl
+                    opens: updateDialogRes.opens,
+                    closes: updateDialogRes.closes
                   }).subscribe(() => {
                     this.getMonthYearData();
                   });
@@ -211,6 +211,7 @@ export class WorkingDaysComponent implements OnInit {
     this.workingDaysService.create(req).subscribe(
       () => {
         this.createMode = false;
+        this.getMonthYearData();
       }
     );
 

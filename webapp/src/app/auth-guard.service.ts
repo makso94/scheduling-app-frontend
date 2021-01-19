@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { AuthService } from './auth/services/auth.service';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { CanActivateChild, Router } from '@angular/router';
 
 
@@ -14,6 +14,10 @@ export class AuthGuardService implements CanActivateChild {
 
   canActivateChild(): Observable<boolean> {
     return this.authService.loginCheck().pipe(
+      tap((user) => {
+        // saves logged in user 
+        localStorage.setItem('active_user', JSON.stringify(user))
+      }),
       map((res) => {
         // if (!res.approved_at) {
         //   this.authService.logout().subscribe(() => {
