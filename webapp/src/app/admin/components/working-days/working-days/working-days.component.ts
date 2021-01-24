@@ -28,8 +28,8 @@ export class WorkingDaysComponent implements OnInit {
   refresh: Subject<any> = new Subject();
   events: CalendarEvent[] = [];
   selectedDays: Array<any> = [];
-  createMode = false;
   workingDaysData: Array<any> = [];
+  createMode = false;
   legends: Array<Legend> = [
     new Legend('Working Days', 'rgba(40, 167, 69, 0.5)'),
     new Legend('Days off', 'rgba(220, 53, 69, 0.5)')];
@@ -47,17 +47,20 @@ export class WorkingDaysComponent implements OnInit {
   }
 
   getMonthYearData(): void {
+    // reset selected days
+    this.selectedDays = [];
+    this.workingDaysData = [];
+
     this.workingDaysService.get(this.year, this.month).subscribe(
       res => {
-        // reset selected days
-        this.selectedDays = [];
         if (res?.data.length === 0) {
           this.createMode = true;
+          this.refresh.next();
           return;
         }
+
         this.createMode = false;
         this.workingDaysData = res.data;
-        console.log(res);
         res.data.forEach((element: any) => {
           this.selectedDays.push({
             date: startOfDay(new Date(element.date)),
@@ -67,6 +70,7 @@ export class WorkingDaysComponent implements OnInit {
         this.refresh.next();
       }
     );
+
   }
 
   dayClicked(day: CalendarMonthViewDay): void {
@@ -86,7 +90,6 @@ export class WorkingDaysComponent implements OnInit {
         } else {
 
           this.selectedDays.push(this.selectedMonthViewDay);
-          console.log(this.selectedDays);
           day.cssClass = 'cal-day-selected';
           this.selectedMonthViewDay = day;
         }
@@ -103,7 +106,6 @@ export class WorkingDaysComponent implements OnInit {
                 width: '600px',
                 data: { day: findedDay, appointments: res.data }
               }).afterClosed().subscribe(updateDialogRes => {
-                console.log(updateDialogRes);
                 if (updateDialogRes) {
                   if (updateDialogRes?.dayOff) {
                     this.workingDaysService.delete(findedDay.id)
@@ -134,7 +136,6 @@ export class WorkingDaysComponent implements OnInit {
           data: { createWorkingDay: extractedDate }
         }).afterClosed().subscribe(res => {
           if (!!res) {
-            console.log(res);
             const req = new RequestWorkingDays();
             req.year = this.year;
             req.month = this.month;
@@ -163,8 +164,6 @@ export class WorkingDaysComponent implements OnInit {
 
 
   beforeMonthViewRender({ body }: { body: CalendarMonthViewDay[] }): void {
-    console.log('beforeMonthViewRender');
-
     body.forEach((day) => {
       if (day.date.getMonth() === this.viewDate.getMonth()) {
         if (
@@ -220,7 +219,6 @@ export class WorkingDaysComponent implements OnInit {
     this.selectedDays.forEach(day => {
       req.days.push(day.date.getDate());
     });
-    console.log(req);
 
     this.workingDaysService.create(req).subscribe(
       () => {
