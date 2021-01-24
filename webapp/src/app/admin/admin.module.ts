@@ -12,6 +12,8 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { WorkingDaysComponent } from './components/working-days/working-days/working-days.component';
 import { EditWorkingDayDialogComponent } from './components/working-days/edit-working-day-dialog/edit-working-day-dialog.component';
+import { AppModule } from '../app.module';
+import { SharedModule } from '../shared/shared.module';
 
 
 @NgModule({
@@ -26,6 +28,7 @@ import { EditWorkingDayDialogComponent } from './components/working-days/edit-wo
   ],
   imports: [
     CommonModule,
+    SharedModule,
     AdminRoutingModule,
     MaterialModule,
     CalendarModule.forRoot({

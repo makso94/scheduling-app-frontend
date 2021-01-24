@@ -1,10 +1,8 @@
-<mat-card>
+<mat-card class="auth">
     <mat-card-header>
         <mat-card-title>
-            <a mat-icon-button [routerLink]="['/']" routerLinkActive="router-link-active">
-                <mat-icon>arrow_back</mat-icon>
-            </a>
-            <h1>Create a new user</h1>
+            <h1>Welcome to Hairdress Studio</h1>
+            <h2><strong>REGISTER</strong> </h2>
         </mat-card-title>
 
     </mat-card-header>
@@ -85,8 +83,12 @@
             </mat-checkbox>
 
             <mat-card-actions>
-                <button class="formSubmitBtn" type="submit" mat-raised-button color="primary" tabindex="7">Create
+                <button  class="formSubmitBtn" type="submit" mat-raised-button color="primary" tabindex="7">Create
                     Account</button>
+                <span>or</span>
+                <a mat-raised-button [routerLink]="['/']" routerLinkActive="router-link-active">
+                    <mat-icon>arrow_back</mat-icon> Back to LOGIN
+                </a>
             </mat-card-actions>
         </form>
     </mat-card-content>

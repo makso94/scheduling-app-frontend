@@ -3,9 +3,10 @@ import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { CalendarView, CalendarMonthViewDay, CalendarEvent } from 'angular-calendar';
 import { format, getDaysInMonth, startOfDay } from 'date-fns';
-import { sortBy } from 'lodash';
-import { Subject } from 'rxjs';
+import { interval, Subject, Subscription } from 'rxjs';
+import { startWith, switchMap } from 'rxjs/operators';
 import { AppointmentsService } from 'src/app/services/appointments.service';
+import { Legend } from 'src/app/shared/components/generic-legend/generic-legend.component';
 import { EditWorkingDayDialogComponent } from '../edit-working-day-dialog/edit-working-day-dialog.component';
 import { RequestWorkingDays } from '../models/working-days-model';
 import { WorkingDaysService } from '../services/working-days.service';
@@ -30,6 +31,10 @@ export class WorkingDaysComponent implements OnInit {
   selectedDays: Array<any> = [];
   createMode = false;
   workingDaysData: Array<any> = [];
+  intervalSub!: Subscription;
+  legend: Array<Legend> = [
+    new Legend('Working Days', 'rgba(40, 167, 69, 0.5)'),
+    new Legend('Days off', 'rgba(220, 53, 69, 0.5)')];
 
   constructor(
     private workingDaysService: WorkingDaysService,
@@ -40,7 +45,10 @@ export class WorkingDaysComponent implements OnInit {
   ngOnInit(): void {
     this.year = this.viewDate.getFullYear();
     this.month = this.viewDate.getMonth() + 1;
-    this.getMonthYearData();
+
+    this.intervalSub = interval(5000)
+      .pipe(startWith(0))
+      .subscribe(() => this.getMonthYearData());
   }
 
   getMonthYearData(): void {
@@ -124,8 +132,8 @@ export class WorkingDaysComponent implements OnInit {
             const req = new RequestWorkingDays();
             req.year = this.year;
             req.month = this.month;
-            req.opens = res.openAtControl;
-            req.closes = res.closeAtControl;
+            req.opens = res.opens;
+            req.closes = res.closes;
             req.days.push(day.date.getDate());
 
             this.workingDaysService.create(req).subscribe(
