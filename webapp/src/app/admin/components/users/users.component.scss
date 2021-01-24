@@ -1,0 +1,15 @@
+mat-card {
+  width: 1200px;
+  .filters *:not(:last-child) {
+    margin-right: 98px;
+  }
+  table {
+    width: 1200px;
+    .isAdmin {
+      color: red;
+    }
+    button{
+      width: 100px;
+    }
+  }
+}

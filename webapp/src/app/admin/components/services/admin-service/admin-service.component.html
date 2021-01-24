@@ -1,11 +1,11 @@
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <mat-card>
+<mat-card class="centerCard">
 
-        <mat-card-header>
-            <mat-card-title *ngIf="!id">Create Service</mat-card-title>
-            <mat-card-title *ngIf="id">Edit Service</mat-card-title>
-        </mat-card-header>
+    <mat-card-header>
+        <mat-card-title *ngIf="!id">Create Service</mat-card-title>
+        <mat-card-title *ngIf="id">Edit Service</mat-card-title>
+    </mat-card-header>
 
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
         <mat-card-content>
 
             <div class="container">
@@ -44,7 +44,8 @@
 
 
                 <mat-chip-list #chipList [multiple]="false" [selectable]="true">
-                    <mat-chip *ngFor="let item of durations" #chip="matChip" (click)="chip.toggleSelected()" [selected]="item.selected" [selectable]="true" (selectionChange)="onChipSelected($event, item)">
+                    <mat-chip *ngFor="let item of durations" #chip="matChip" (click)="chip.toggleSelected()"
+                        [selected]="item.selected" [selectable]="true" (selectionChange)="onChipSelected($event, item)">
                         {{item.duration | minutesToHours}}
                     </mat-chip>
                 </mat-chip-list>
@@ -54,12 +55,12 @@
 
         </mat-card-content>
         <mat-card-actions align="end">
-            <a type="submit" mat-raised-button [routerLink]="['/admin','services']" routerLinkActive="router-link-active">Cancel</a>
-
-
-            <button *ngIf="!id" type="submit" mat-raised-button color="primary" [disabled]="form.invalid">Create</button>
+            <a type="submit" mat-raised-button [routerLink]="['/admin','services']"
+                routerLinkActive="router-link-active">Cancel</a>
+            <button *ngIf="!id" type="submit" mat-raised-button color="primary"
+                [disabled]="form.invalid">Create</button>
             <button *ngIf="id" type="submit" mat-raised-button color="primary" [disabled]="form.invalid">Update</button>
 
         </mat-card-actions>
-    </mat-card>
-</form>
+    </form>
+</mat-card>

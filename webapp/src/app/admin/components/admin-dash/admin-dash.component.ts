@@ -5,7 +5,7 @@ import { AuthService } from 'src/app/auth/services/auth.service';
 @Component({
   selector: 'app-admin-dash',
   templateUrl: './admin-dash.component.html',
-  styleUrls: ['./admin-dash.component.css']
+  styleUrls: ['./admin-dash.component.scss']
 })
 export class AdminDashComponent implements OnInit {
 

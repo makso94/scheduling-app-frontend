@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ConfirmValidator } from 'src/app/customValidators/confirm-validator';
+import { ConfirmValidator } from 'src/app/shared/validators/confirm-validator';
 import { UserService } from '../../services/user.service';
 
 @Component({

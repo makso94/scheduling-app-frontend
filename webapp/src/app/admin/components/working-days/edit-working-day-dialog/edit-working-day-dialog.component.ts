@@ -2,8 +2,8 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { format } from 'date-fns';
-import { AppointmentsService } from 'src/app/services/appointments.service';
-import { compareDateTime } from 'src/app/validators/form-validators';
+import { AppointmentsService } from 'src/app/shared/services/appointments.service';
+import { compareDateTime } from 'src/app/shared/validators/form-validators';
 
 @Component({
   selector: 'app-edit-working-day-dialog',

@@ -16,7 +16,7 @@ export class AuthGuardService implements CanActivateChild {
     return this.authService.loginCheck().pipe(
       tap((user) => {
         // saves logged in user 
-        localStorage.setItem('active_user', JSON.stringify(user))
+        localStorage.setItem('active_user', JSON.stringify(user));
       }),
       map((res) => {
         // if (!res.approved_at) {

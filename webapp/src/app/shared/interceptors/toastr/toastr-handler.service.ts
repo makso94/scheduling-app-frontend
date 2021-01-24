@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { includes } from 'lodash';
 import { ToastrService } from 'ngx-toastr';
 import { Subject } from 'rxjs';
-import { filter, tap } from 'rxjs/operators';
+import { filter } from 'rxjs/operators';
 import { ToastrMeta } from './toastr.model';
 
 @Injectable({

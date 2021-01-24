@@ -3,9 +3,8 @@ import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { CalendarView, CalendarMonthViewDay, CalendarEvent } from 'angular-calendar';
 import { format, getDaysInMonth, startOfDay } from 'date-fns';
-import { interval, Subject, Subscription } from 'rxjs';
-import { startWith, switchMap } from 'rxjs/operators';
-import { AppointmentsService } from 'src/app/services/appointments.service';
+import { Subject } from 'rxjs';
+import { AppointmentsService } from 'src/app/shared/services/appointments.service';
 import { Legend } from 'src/app/shared/components/generic-legend/generic-legend.component';
 import { EditWorkingDayDialogComponent } from '../edit-working-day-dialog/edit-working-day-dialog.component';
 import { RequestWorkingDays } from '../models/working-days-model';
@@ -31,8 +30,7 @@ export class WorkingDaysComponent implements OnInit {
   selectedDays: Array<any> = [];
   createMode = false;
   workingDaysData: Array<any> = [];
-  intervalSub!: Subscription;
-  legend: Array<Legend> = [
+  legends: Array<Legend> = [
     new Legend('Working Days', 'rgba(40, 167, 69, 0.5)'),
     new Legend('Days off', 'rgba(220, 53, 69, 0.5)')];
 
@@ -45,15 +43,14 @@ export class WorkingDaysComponent implements OnInit {
   ngOnInit(): void {
     this.year = this.viewDate.getFullYear();
     this.month = this.viewDate.getMonth() + 1;
-
-    this.intervalSub = interval(5000)
-      .pipe(startWith(0))
-      .subscribe(() => this.getMonthYearData());
+    this.getMonthYearData();
   }
 
   getMonthYearData(): void {
     this.workingDaysService.get(this.year, this.month).subscribe(
       res => {
+        // reset selected days
+        this.selectedDays = [];
         if (res?.data.length === 0) {
           this.createMode = true;
           return;
@@ -106,15 +103,24 @@ export class WorkingDaysComponent implements OnInit {
                 width: '600px',
                 data: { day: findedDay, appointments: res.data }
               }).afterClosed().subscribe(updateDialogRes => {
+                console.log(updateDialogRes);
                 if (updateDialogRes) {
+                  if (updateDialogRes?.dayOff) {
+                    this.workingDaysService.delete(findedDay.id)
+                      .subscribe(() => {
+                        this.getMonthYearData();
+                      });
+                    return;
+                  }
+
                   this.workingDaysService.update(findedDay.id, {
                     opens: updateDialogRes.opens,
                     closes: updateDialogRes.closes
                   }).subscribe(() => {
                     this.getMonthYearData();
                   });
-                }
 
+                }
               });
 
             }

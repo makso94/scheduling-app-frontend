@@ -6,7 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material/material.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
-import { ToastrInterceptorService } from './interceptors/toastr/toastr-interceptor.service';
+import { ToastrInterceptorService } from './shared/interceptors/toastr/toastr-interceptor.service';
 
 @NgModule({
   declarations: [

@@ -1,14 +1,17 @@
+mat-card {
+  width: 430px;
+}
 .container {
-    /* width: 300px; */
-    display: flex;
-    flex-direction: column;
+  /* width: 300px; */
+  display: flex;
+  flex-direction: column;
 }
 
 .mat-chip-list {
-    width: 450px;
+  width: 430px;
 }
 
 .mat-chip-list .mat-chip {
-    width: 100px;
-    justify-content: center;
+  width: 100px;
+  justify-content: center;
 }

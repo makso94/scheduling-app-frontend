@@ -1,7 +1,11 @@
-table{
-    width: 100%;
+mat-card {
+  width: 960px;
 }
 
-table tr:hover{
-    background-color: whitesmoke;
+table {
+  width: 100%;
+}
+
+table tr:hover {
+  background-color: whitesmoke;
 }

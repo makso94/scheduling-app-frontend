@@ -47,9 +47,9 @@ export class WorkingDaysListComponent implements OnInit {
 
   @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any> | undefined;
 
-  constructor(
-    // private modal: NgbModal
-  ) { }
+  constructor() {
+    console.log('WorkingDaysListComponent---------------------------------');
+  }
 
 
   dayStartHour = 8;

@@ -29,4 +29,8 @@ export class WorkingDaysService {
   update(id: number, data: any): Observable<any> {
     return this.http.put(`${API}/working-days/${id}`, data);
   }
+
+  delete(id: number): Observable<any> {
+    return this.http.delete(`${API}/working-days/${id}`);
+  }
 }

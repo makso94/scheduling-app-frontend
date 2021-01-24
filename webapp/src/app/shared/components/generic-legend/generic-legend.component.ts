@@ -11,7 +11,7 @@ export class Legend {
   styleUrls: ['./generic-legend.component.scss']
 })
 export class GenericLegendComponent implements OnInit {
-  @Input() title!: string;
+  // @Input() title!: string;
   @Input() legends!: Legend[];
 
   constructor() { }

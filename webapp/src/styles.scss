@@ -13,7 +13,7 @@ body {
 }
 
 .mat-card {
-  width: 100%;
+  // min-width: 640px;
   height: auto;
 }
 
@@ -49,10 +49,6 @@ app-auth {
   width: 100%;
 }
 
-table {
-  min-width: 960px;
-}
-
 .auth {
   display: flex;
   flex-direction: column;
@@ -73,4 +69,8 @@ table {
 .timepicker-backdrop-overlay,
 .timepicker-overlay {
   z-index: 1001 !important;
+}
+
+.centerCard {
+  margin: 8px auto;
 }

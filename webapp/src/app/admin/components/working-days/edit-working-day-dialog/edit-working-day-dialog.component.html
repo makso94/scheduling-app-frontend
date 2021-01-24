@@ -41,9 +41,13 @@
 
     </mat-dialog-content>
     <mat-dialog-actions align="end">
-        <button mat-stroked-button mat-dialog-close>Cancel</button>
+        <button type="button" mat-stroked-button mat-dialog-close>Cancel</button>
         <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
-        <button mat-stroked-button color="primary" [disabled]="form.invalid" [mat-dialog-close]="form.value">
+        <button *ngIf="editMode" type="button" mat-stroked-button color="warn" [mat-dialog-close]="{dayOff: true}">
+            <span>Day off</span>
+        </button>
+        <button type="button" mat-stroked-button color="primary" [disabled]="form.invalid"
+            [mat-dialog-close]="form.value">
             <span *ngIf="!editMode">Create</span>
             <span *ngIf="editMode">Update</span>
         </button>

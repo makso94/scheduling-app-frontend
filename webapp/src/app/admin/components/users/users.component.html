@@ -1,51 +1,41 @@
-<mat-card>
+<mat-card class="centerCard">
     <mat-card-header>
         <mat-card-title>Users</mat-card-title>
     </mat-card-header>
     <mat-card-content>
 
-        <form [formGroup]="formGroup">
-            <div class="filters">
-                <mat-form-field appearance="outline">
-                    <mat-label>Filter by First Name</mat-label>
-                    <input matInput formControlName="first_name">
-                </mat-form-field>
+        <form [formGroup]="formGroup" class="filters">
+            <mat-form-field appearance="outline">
+                <mat-label>Filter by First Name</mat-label>
+                <input matInput formControlName="first_name">
+            </mat-form-field>
 
 
-                <mat-form-field appearance="outline">
-                    <mat-label>Filter by Last Name</mat-label>
-                    <input matInput formControlName="last_name">
-                </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Filter by Last Name</mat-label>
+                <input matInput formControlName="last_name">
+            </mat-form-field>
 
 
-                <mat-form-field appearance="outline">
-                    <mat-label>Filter by Email</mat-label>
-                    <input matInput formControlName="email">
-                </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Filter by Email</mat-label>
+                <input matInput formControlName="email">
+            </mat-form-field>
 
 
-                <mat-form-field appearance="outline">
-                    <mat-label>Filter by Role</mat-label>
-                    <mat-select formControlName="is_admin">
-                        <mat-option value="">Any</mat-option>
-                        <mat-option value="0">User</mat-option>
-                        <mat-option value="1">Admin</mat-option>
-                    </mat-select>
-                </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Filter by Role</mat-label>
+                <mat-select formControlName="is_admin">
+                    <mat-option value="">Any</mat-option>
+                    <mat-option value="0">User</mat-option>
+                    <mat-option value="1">Admin</mat-option>
+                </mat-select>
+            </mat-form-field>
 
-
-
-
-            </div>
         </form>
 
 
-        <!-- <mat-form-field>
-            <mat-label>Filter</mat-label>
-            <input matInput (keyup)="applyFilter($event)" placeholder="Ex. ium" #input>
-        </mat-form-field> -->
-
-        <table mat-table [dataSource]="users" class="mat-elevation-z8">
+        <table mat-table [dataSource]="users" [fixedLayout]="true" class="mat-elevation-z8">
 
             <!-- Position Column -->
             <ng-container matColumnDef="first_name">
@@ -62,17 +52,18 @@
             <!-- Weight Column -->
             <ng-container matColumnDef="email">
                 <th mat-header-cell *matHeaderCellDef> Email </th>
-                <td mat-cell *matCellDef="let element"> {{element.email}}
-                    <button type="button" mat-button color="warn" *ngIf="element.is_admin">admin</button>
-                </td>
+                <td mat-cell *matCellDef="let element" [title]=" element.is_admin? 'ADMIN': ''"
+                    [ngClass]="{isAdmin: element.is_admin}"> {{element.email}} </td>
             </ng-container>
 
             <!-- Symbol Column -->
             <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef> Actions </th>
                 <td mat-cell *matCellDef="let element">
-                    <button *ngIf="!element.is_admin && element.approved_at" type="button" mat-raised-button color="warn" (click)="deactive(element.id)">Deactivate</button>
-                    <button *ngIf="!element.approved_at" type="button" mat-raised-button color="primary" (click)="approve(element.id)">Approve</button>
+                    <button *ngIf="!element.is_admin && element.approved_at" type="button" mat-raised-button
+                        color="warn" (click)="deactive(element.id)">Deactivate</button>
+                    <button *ngIf="!element.approved_at" type="button" mat-raised-button color="primary"
+                        (click)="approve(element.id)">Approve</button>
 
                 </td>
             </ng-container>
