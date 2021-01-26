@@ -2,37 +2,31 @@ import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { AuthService } from './auth/services/auth.service';
 import { catchError, map, tap } from 'rxjs/operators';
-import { CanActivateChild, Router } from '@angular/router';
+import { CanActivateChild, CanLoad, Route, Router, UrlSegment, UrlTree } from '@angular/router';
+import { User } from './auth/models/user.model';
+import { isNil } from 'lodash';
 
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuardService implements CanActivateChild {
+export class AuthGuardService implements CanLoad {
 
   constructor(private authService: AuthService, private router: Router) { }
+  canLoad(route: Route, segments: UrlSegment[]): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
+    return this.authService.loginCheck()
+      .pipe(
+        map(user => {
+          if (isNil(user.approved_at)) {
+            this.router.navigate(['/not-approved']);
+            return false;
+          }
+          console.log('tuj ne treba da dovadja');
 
-  canActivateChild(): Observable<boolean> {
-    return this.authService.loginCheck().pipe(
-      tap((user) => {
-        // saves logged in user 
-        localStorage.setItem('active_user', JSON.stringify(user));
-      }),
-      map((res) => {
-        // if (!res.approved_at) {
-        //   this.authService.logout().subscribe(() => {
-        //     this.router.navigate(['pageNotFound']);
-        //     return false;
-        //   }
-        //   );
-        // }
-        // console.log('ulazam i tuj ');
-        return true;
-      }),
-      catchError(() => {
-        this.router.navigate(['/']);
-        return of(false);
-      })
-    );
+          return user.is_admin === route.data?.role ? true : false;
+        }),
+        catchError(() => of(false))
+      )
   }
+
 }

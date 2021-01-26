@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AdminRedirect } from 'src/app/constants';
+import { AdminRedirect, CustomerRedirect } from 'src/app/constants';
 import { User } from '../../models/user.model';
 import { AuthService } from '../../services/auth.service';
 
@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
         this.router.navigate([AdminRedirect]);
       }
       else {
-        this.router.navigate(['/appointment']);
+        this.router.navigate([CustomerRedirect]);
       }
     });
   }
@@ -52,7 +52,7 @@ export class LoginComponent implements OnInit {
           this.router.navigate([AdminRedirect]);
         }
         else {
-          this.router.navigate(['/appointment']);
+          this.router.navigate([CustomerRedirect]);
         }
 
       });

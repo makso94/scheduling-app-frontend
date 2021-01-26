@@ -2,6 +2,10 @@ export class ResponseUsers {
     data!: Array<User>;
 }
 
+export class LoginResponseUser {
+    msg!: string;
+    user!: User;
+}
 
 export class User {
     id!: number;

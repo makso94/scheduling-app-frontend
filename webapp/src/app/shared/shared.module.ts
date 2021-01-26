@@ -4,10 +4,12 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
 import { GenericLegendComponent } from './components/generic-legend/generic-legend.component';
 import { MaterialModule } from '../material/material.module';
 import { RouterModule } from '@angular/router';
+import { UserNotApprovedComponent } from './components/user-not-approved/user-not-approved.component';
 
 const sharedComponents = [
   PageNotFoundComponent,
-  GenericLegendComponent
+  GenericLegendComponent,
+  UserNotApprovedComponent
 ];
 
 @NgModule({
