@@ -102,6 +102,8 @@ export class WorkingDaysComponent implements OnInit {
         {
           this.appointmentsService.getByWorkingDayId(findedDay.id).subscribe(
             res => {
+              console.log(res);
+              
               this.dialog.open(EditWorkingDayDialogComponent, {
                 width: '600px',
                 data: { day: findedDay, appointments: res.data }

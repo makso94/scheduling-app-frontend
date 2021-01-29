@@ -11,7 +11,6 @@ export class ServiceData {
     name!: string;
     description!: string;
     price!: number;
-    duration!: number;
-    mario!: string;
+    duration!: number; //in minutes
 }
 
