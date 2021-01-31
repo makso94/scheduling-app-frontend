@@ -21,12 +21,10 @@ export class AuthGuardService implements CanLoad {
             this.router.navigate(['/not-approved']);
             return false;
           }
-          console.log('tuj ne treba da dovadja');
-
           return user.is_admin === route.data?.role ? true : false;
         }),
         catchError(() => of(false))
-      )
+      );
   }
 
 }

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { add, setMinutes } from 'date-fns';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+import { ResponseWorkingDays } from 'src/app/admin/components/working-days/models/working-days-model';
 import { API } from '../../constants';
 import { ResponseAppointments } from './appointments.model';
 
@@ -11,12 +12,10 @@ import { ResponseAppointments } from './appointments.model';
 })
 export class AppointmentsService {
 
-  constructor(private http: HttpClient) {
-    this.getByMonthYear(1,2021).subscribe();
-   }
+  constructor(private http: HttpClient) { }
 
 
-  getByMonthYear(month: number, year: number) {
+  getByMonthYear(month: number, year: number): Observable<ResponseWorkingDays> {
     const headers = new HttpHeaders()
       .set('X-Toastr-Meta', JSON.stringify({ exclude: [200] }));
 
@@ -25,13 +24,23 @@ export class AppointmentsService {
       .set('year', year.toString());
 
 
-    return this.http.get<ResponseAppointments>(`${API}/appointments`, { headers, params })
+    return this.http.get<ResponseWorkingDays>(`${API}/appointments`, { headers, params })
       .pipe(
-        tap(console.log)
+        map(res => {
+          res.data.forEach(workingDay => {
+            workingDay.appointments.map(appointment => {
+              // calculating appointment end dateTime based on service durations
+              appointment.start = new Date(appointment.start);
+              let totalDurationMins = 0;
+              appointment.services.forEach(service => {
+                totalDurationMins += service.duration;
+              });
+              appointment.end = add(appointment.start, { minutes: totalDurationMins });
+            });
+          });
+          return res;
+        })
       );
-
-
-
   }
 
 
@@ -48,15 +57,20 @@ export class AppointmentsService {
         map(res => {
           res.data.forEach(app => {
             // calculating appointment end dateTime based on service durations
-            app.start = new Date(app.start)
+            app.start = new Date(app.start);
             let totalDurationMins = 0;
             app.services.forEach(service => {
               totalDurationMins += service.duration;
-            })
+            });
             app.end = add(app.start, { minutes: totalDurationMins });
-          })
+          });
           return res;
         })
       );
   }
+
+  create(formData: any): Observable<any> {
+    return this.http.post(`${API}/appointments`, formData);
+  }
+
 }

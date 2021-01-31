@@ -1,0 +1,110 @@
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>Create Appointment</mat-card-title>
+    </mat-card-header>
+
+    <form [formGroup]="form">
+
+        <mat-card-content>
+
+
+
+
+            <mat-horizontal-stepper linear #stepper>
+                <mat-step [editable]="true">
+                    <ng-template matStepLabel>Select services</ng-template>
+
+                    <mat-form-field appearance="outline">
+                        <mat-label>Select Services</mat-label>
+                        <mat-select formControlName="service_ids" multiple>
+                            <mat-option *ngFor="let service of serviceList" [value]="service.id">{{service.name}}
+                                {{service.description? service.description: ''}} </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <div>
+                        <button mat-button matStepperNext>Next</button>
+                    </div>
+                </mat-step>
+                <mat-step [editable]="true">
+                    <ng-template matStepLabel>Pick date from Calendar</ng-template>
+
+                    <mat-grid-list cols="3" rowHeight="4:1">
+                        <mat-grid-tile>
+                            <button type="button" mat-raised-button color="primary" mwlCalendarPreviousView
+                                [view]="view" [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()">
+                                Previous
+                            </button>
+                            <button type="button" mat-stroked-button color="primary" mwlCalendarToday
+                                [(viewDate)]="viewDate">
+                                Today
+                            </button>
+                            <button type="button" mat-raised-button color="primary" mwlCalendarNextView [view]="view"
+                                [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()">
+                                Next
+                            </button>
+                        </mat-grid-tile>
+                        <mat-grid-tile>
+                            <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+
+                        </mat-grid-tile>
+                        <mat-grid-tile>
+                            <mat-button-toggle-group>
+
+                                <mat-button-toggle [checked]="view === CalendarView.Month"
+                                    (click)="setView(CalendarView.Month)">
+                                    Month
+                                </mat-button-toggle>
+                                <mat-button-toggle [checked]="view === CalendarView.Week"
+                                    (click)="setView(CalendarView.Week)">
+                                    Week
+                                </mat-button-toggle>
+                                <mat-button-toggle [checked]="view === CalendarView.Day"
+                                    (click)="setView(CalendarView.Day)">
+                                    Day
+                                </mat-button-toggle>
+                            </mat-button-toggle-group>
+                        </mat-grid-tile>
+                    </mat-grid-list>
+
+
+                    <div [ngSwitch]="view">
+                        <mwl-calendar-month-view *ngSwitchCase="CalendarView.Month" [viewDate]="viewDate"
+                            [events]="events" [refresh]="refresh" [weekStartsOn]="1"
+                            (dayClicked)="changeDay($event.day.date)"
+                            (beforeViewRender)="beforeMonthViewRender($event)">
+                        </mwl-calendar-month-view>
+                        <mwl-calendar-week-view *ngSwitchCase="CalendarView.Week" [viewDate]="viewDate"
+                            [events]="events" [refresh]="refresh" [weekStartsOn]="1" [hourSegments]="4"
+                            [dayStartHour]="9" [dayEndHour]="19" (hourSegmentClicked)="slotClicked($event.date) "
+                            >
+                        </mwl-calendar-week-view>
+
+                    </div>
+
+
+                    <div>
+                        <button mat-button matStepperPrevious>Back</button>
+                        <button mat-button matStepperNext>Next</button>
+                    </div>
+                </mat-step>
+                <mat-step>
+                    <ng-template matStepLabel>Done</ng-template>
+                    <p>You are now done.</p>
+                    <div>
+                        <button mat-button matStepperPrevious>Back</button>
+                        <button mat-button (click)="stepper.reset()">Reset</button>
+                    </div>
+                </mat-step>
+            </mat-horizontal-stepper>
+
+
+
+
+
+        </mat-card-content>
+        <mat-card-actions>
+            <button type="submit" mat-raised-button color="primary" [disabled]="form.invalid" (click)="create()">Create
+                Appointment</button>
+        </mat-card-actions>
+    </form>
+</mat-card>

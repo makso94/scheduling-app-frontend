@@ -53,6 +53,8 @@ export class WorkingDaysComponent implements OnInit {
 
     this.workingDaysService.get(this.year, this.month).subscribe(
       res => {
+        console.log(res);
+
         if (res?.data.length === 0) {
           this.createMode = true;
           this.refresh.next();
@@ -103,7 +105,7 @@ export class WorkingDaysComponent implements OnInit {
           this.appointmentsService.getByWorkingDayId(findedDay.id).subscribe(
             res => {
               console.log(res);
-              
+
               this.dialog.open(EditWorkingDayDialogComponent, {
                 width: '600px',
                 data: { day: findedDay, appointments: res.data }

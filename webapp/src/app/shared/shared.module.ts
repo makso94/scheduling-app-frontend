@@ -5,11 +5,15 @@ import { GenericLegendComponent } from './components/generic-legend/generic-lege
 import { MaterialModule } from '../material/material.module';
 import { RouterModule } from '@angular/router';
 import { UserNotApprovedComponent } from './components/user-not-approved/user-not-approved.component';
+import { CreateAppointmentComponent } from './components/create-appointment/create-appointment.component';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 const sharedComponents = [
   PageNotFoundComponent,
   GenericLegendComponent,
-  UserNotApprovedComponent
+  UserNotApprovedComponent,
+  CreateAppointmentComponent
 ];
 
 @NgModule({
@@ -17,8 +21,11 @@ const sharedComponents = [
   imports: [
     CommonModule,
     MaterialModule,
-    RouterModule
-  ],
+    RouterModule,
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory,
+    }),],
   exports: sharedComponents
 })
 export class SharedModule { }

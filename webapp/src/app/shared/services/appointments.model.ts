@@ -1,4 +1,4 @@
-import { ServiceData } from "src/app/admin/models/services.models";
+import { ServiceData } from 'src/app/admin/models/services.models';
 
 export class ResponseAppointments {
     data!: Array<Appointment>;

@@ -18,7 +18,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { MatDialogModule } from '@angular/material/dialog';
-
+import { MatStepperModule } from '@angular/material/stepper';
 
 const materialModules = [
   CommonModule,
@@ -40,7 +40,8 @@ const materialModules = [
   MatBadgeModule,
   MatButtonToggleModule,
   NgxMaterialTimepickerModule,
-  MatDialogModule
+  MatDialogModule,
+  MatStepperModule
 ];
 
 @NgModule({
