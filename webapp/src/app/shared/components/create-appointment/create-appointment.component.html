@@ -36,7 +36,7 @@
                             </button>
                             <button type="button" mat-stroked-button color="primary" mwlCalendarToday
                                 [(viewDate)]="viewDate">
-                                Today
+                                Current
                             </button>
                             <button type="button" mat-raised-button color="primary" mwlCalendarNextView [view]="view"
                                 [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()">
@@ -49,19 +49,11 @@
                         </mat-grid-tile>
                         <mat-grid-tile>
                             <mat-button-toggle-group>
-
                                 <mat-button-toggle [checked]="view === CalendarView.Month"
                                     (click)="setView(CalendarView.Month)">
-                                    Month
+                                    Month View
                                 </mat-button-toggle>
-                                <mat-button-toggle [checked]="view === CalendarView.Week"
-                                    (click)="setView(CalendarView.Week)">
-                                    Week
-                                </mat-button-toggle>
-                                <mat-button-toggle [checked]="view === CalendarView.Day"
-                                    (click)="setView(CalendarView.Day)">
-                                    Day
-                                </mat-button-toggle>
+
                             </mat-button-toggle-group>
                         </mat-grid-tile>
                     </mat-grid-list>
@@ -69,15 +61,19 @@
 
                     <div [ngSwitch]="view">
                         <mwl-calendar-month-view *ngSwitchCase="CalendarView.Month" [viewDate]="viewDate"
-                            [events]="events" [refresh]="refresh" [weekStartsOn]="1"
-                            (dayClicked)="changeDay($event.day.date)"
+                            [events]="events" [refresh]="refresh" [weekStartsOn]="1" (dayClicked)="changeDay($event)"
                             (beforeViewRender)="beforeMonthViewRender($event)">
                         </mwl-calendar-month-view>
-                        <mwl-calendar-week-view *ngSwitchCase="CalendarView.Week" [viewDate]="viewDate"
+                        <!-- <mwl-calendar-week-view *ngSwitchCase="CalendarView.Week" [viewDate]="viewDate"
                             [events]="events" [refresh]="refresh" [weekStartsOn]="1" [hourSegments]="4"
                             [dayStartHour]="9" [dayEndHour]="19" (hourSegmentClicked)="slotClicked($event.date) "
-                            >
-                        </mwl-calendar-week-view>
+                            (beforeViewRender)="beforeWeekViewRender($event)">
+                        </mwl-calendar-week-view> -->
+
+                        <mwl-calendar-day-view *ngSwitchCase="CalendarView.Day" [viewDate]="viewDate" [events]="events"
+                            [refresh]="refresh" [hourSegments]="4" [dayStartHour]="9" [dayEndHour]="19"
+                            (hourSegmentClicked)="slotClicked($event.date) ">
+                        </mwl-calendar-day-view>
 
                     </div>
 

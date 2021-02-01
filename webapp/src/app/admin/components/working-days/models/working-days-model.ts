@@ -22,3 +22,10 @@ export class WorkingDaysWithAppointments {
     is_business_day!: number;
     appointments!: Array<Appointment>;
 }
+
+
+export class WorkingDay {
+    id?: number;
+    cssClass?: string;
+    date?: Date;
+}

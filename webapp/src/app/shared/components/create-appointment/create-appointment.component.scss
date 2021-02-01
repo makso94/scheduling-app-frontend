@@ -7,3 +7,12 @@
 .cal-day-not-selected:hover {
   background-color: rgba(220, 53, 69, 0.5) !important;
 }
+
+.mat-grid-list {
+  .mat-grid-tile:first-of-type .mat-figure {
+    justify-content: flex-start;
+  }
+  .mat-grid-tile:last-of-type .mat-figure {
+    justify-content: flex-end;
+  }
+}

@@ -1,12 +1,14 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CalendarEvent, CalendarMonthViewDay, CalendarView } from 'angular-calendar';
+import { CalendarEvent, CalendarMonthViewDay, CalendarView, CalendarWeekViewBeforeRenderEvent } from 'angular-calendar';
 import { format, formatISO, getMonth, getYear, startOfDay } from 'date-fns';
 import { Subject, Subscription } from 'rxjs';
+import { WorkingDay } from 'src/app/admin/components/working-days/models/working-days-model';
 import { ServiceData } from 'src/app/admin/models/services.models';
 import { ServicesService } from 'src/app/admin/services/services.service';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { AppointmentsService } from '../../services/appointments.service';
+
 
 @Component({
   selector: 'app-create-appointment',
@@ -30,7 +32,7 @@ export class CreateAppointmentComponent implements OnInit, OnDestroy {
   events: CalendarEvent[] = [];
   refresh: Subject<any> = new Subject();
   CalendarView = CalendarView;
-  selectedDays: Array<any> = [];
+  selectedDays: Array<WorkingDay> = [];
 
   // Subscriptions
   ServiceSubs!: Subscription;
@@ -55,12 +57,11 @@ export class CreateAppointmentComponent implements OnInit, OnDestroy {
     });
 
     this.appointmentsService.getByMonthYear(getMonth((this.viewDate)) + 1, getYear(this.viewDate)).subscribe(res => {
-      console.log(res);
-
       res.data.forEach(day => {
         this.selectedDays.push({
           date: startOfDay(new Date(day.date)),
-          cssClass: 'cal-day-selected'
+          cssClass: 'cal-day-selected',
+          id: day.id
         });
 
         day.appointments.forEach(app => {
@@ -103,9 +104,16 @@ export class CreateAppointmentComponent implements OnInit, OnDestroy {
 
 
 
-  changeDay(date: Date): void {
-    this.viewDate = date;
-    this.view = CalendarView.Week;
+  changeDay(event: any): void {
+    console.log(event);
+    if (event.day.meta?.workingDayId) {
+      this.form.get('working_day_id')?.setValue(event.day.meta.workingDayId);
+      this.viewDate = event.day.date;
+      this.view = CalendarView.Day;
+    }
+    else {
+      window.alert(`You can not make an appointment for this day.`)
+    }
   }
 
 
@@ -124,14 +132,20 @@ export class CreateAppointmentComponent implements OnInit, OnDestroy {
 
 
   beforeMonthViewRender({ body }: { body: CalendarMonthViewDay[] }): void {
+
     body.forEach((day) => {
       if (day.date.getMonth() === this.viewDate.getMonth()) {
+        let tmpDay = new WorkingDay;
         if (
           this.selectedDays.some(
-            (selectedDay: any) => selectedDay.date.getTime() === day.date.getTime()
+            (selectedDay: WorkingDay) => {
+              tmpDay = selectedDay;
+              return selectedDay.date?.getTime() === day.date.getTime()
+            }
           )
         ) {
           day.cssClass = 'cal-day-selected';
+          day.meta = { workingDayId: tmpDay?.id };
         }
         else {
           day.cssClass = 'cal-day-not-selected';
@@ -140,4 +154,7 @@ export class CreateAppointmentComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+
+
 }
