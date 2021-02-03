@@ -1,5 +1,6 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatHorizontalStepper } from '@angular/material/stepper';
 import { CalendarEvent, CalendarMonthViewDay, CalendarView, CalendarWeekViewBeforeRenderEvent } from 'angular-calendar';
 import { format, formatISO, getMonth, getYear, startOfDay } from 'date-fns';
 import { Subject, Subscription } from 'rxjs';
@@ -17,6 +18,8 @@ import { AppointmentsService } from '../../services/appointments.service';
   encapsulation: ViewEncapsulation.None
 })
 export class CreateAppointmentComponent implements OnInit, OnDestroy {
+  @ViewChild('stepper') stepper!: MatHorizontalStepper;
+
   form: FormGroup = this.fb.group({
     service_ids: ['', Validators.required],
     user_id: ['', Validators.required],
@@ -111,8 +114,12 @@ export class CreateAppointmentComponent implements OnInit, OnDestroy {
       this.viewDate = event.day.date;
       this.view = CalendarView.Day;
     }
+    else if (event.day.isPast) {
+      window.alert(`You can not make an appointment in past.`);
+
+    }
     else {
-      window.alert(`You can not make an appointment for this day.`)
+      window.alert(`You can not make an appointment for this day.`);
     }
   }
 
@@ -127,6 +134,7 @@ export class CreateAppointmentComponent implements OnInit, OnDestroy {
 
   slotClicked(dateTime: Date): void {
     this.form.get('start')?.setValue(format(dateTime, `Y-MM-dd HH:mm:ss`));
+    this.stepper.next();
   }
 
 
@@ -140,7 +148,7 @@ export class CreateAppointmentComponent implements OnInit, OnDestroy {
           this.selectedDays.some(
             (selectedDay: WorkingDay) => {
               tmpDay = selectedDay;
-              return selectedDay.date?.getTime() === day.date.getTime()
+              return selectedDay.date?.getTime() === day.date.getTime();
             }
           )
         ) {

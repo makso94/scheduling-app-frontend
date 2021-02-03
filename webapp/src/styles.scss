@@ -11,7 +11,9 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
   background-image: url("./assets/hairDresserStudio.jpg");
 }
-
+.mat-drawer-container {
+  background: transparent;
+}
 .mat-card {
   // min-width: 640px;
   height: auto;
@@ -28,7 +30,8 @@ body {
   font-size: small;
 }
 
-app-auth , app-user-not-approved {
+app-auth,
+app-user-not-approved {
   display: flex;
   justify-content: center;
   align-items: center;

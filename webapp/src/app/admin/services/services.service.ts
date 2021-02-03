@@ -30,7 +30,9 @@ export class ServicesService {
   }
 
   get(id: number): Observable<ResponseService> {
-    return this.http.get<ResponseService>(`${API}/services/${id}`);
+    const headers = new HttpHeaders()
+      .set('X-Toastr-Meta', JSON.stringify({ exclude: [200] }))
+    return this.http.get<ResponseService>(`${API}/services/${id}`, { headers });
   }
 
 }

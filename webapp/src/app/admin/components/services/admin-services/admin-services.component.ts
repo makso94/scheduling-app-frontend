@@ -8,7 +8,8 @@ import { ServicesService } from 'src/app/admin/services/services.service';
   styleUrls: ['./admin-services.component.css']
 })
 export class AdminServicesComponent implements OnInit {
-  displayedColumns = ['name', 'description', 'price', 'duration', 'actions'];
+  // displayedColumns = ['name', 'description', 'price', 'duration', 'actions'];
+  displayedColumns = ['name', 'price', 'duration', 'actions'];
 
   services: Array<ServiceData> = [];
 

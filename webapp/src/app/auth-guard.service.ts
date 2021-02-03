@@ -23,7 +23,10 @@ export class AuthGuardService implements CanLoad {
           }
           return user.is_admin === route.data?.role ? true : false;
         }),
-        catchError(() => of(false))
+        catchError(() => {
+          this.router.navigate(['/']);
+          return of(false)
+        })
       );
   }
 

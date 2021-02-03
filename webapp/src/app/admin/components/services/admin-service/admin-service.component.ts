@@ -23,7 +23,7 @@ export class AdminServiceComponent implements OnInit {
 
   form: FormGroup = this.fb.group({
     name: ['', [Validators.required, Validators.maxLength(32)]],
-    description: ['', [Validators.maxLength(32)]],
+    // description: ['', [Validators.maxLength(32)]],
     price: [, [Validators.required]],
     duration: ['', [Validators.required]]
   });
