@@ -1,0 +1,16 @@
+:host ::ng-deep .mat-card {
+  width: 640px;
+  .noAppointments {
+    text-align: center;
+    margin-top: 24px;
+  }
+  .appointmentCard {
+    width: 480px;
+    margin: 16px auto !important;
+
+    .mat-chip-list-wrapper {
+      align-items: flex-start;
+      flex-direction: column !important;
+    }
+  }
+}

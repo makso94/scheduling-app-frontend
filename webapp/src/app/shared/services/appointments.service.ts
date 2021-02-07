@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { add, setMinutes } from 'date-fns';
+import { head } from 'lodash';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { ResponseWorkingDays } from 'src/app/admin/components/working-days/models/working-days-model';
@@ -71,6 +72,19 @@ export class AppointmentsService {
 
   create(formData: any): Observable<any> {
     return this.http.post(`${API}/appointments`, formData);
+  }
+
+
+  getByUserId(id: number): Observable<any> {
+    const headers = new HttpHeaders()
+      .set('X-Toastr-Meta', JSON.stringify({ exclude: [200] }));
+
+    return this.http.get(`${API}/appointments/user/${id}`, { headers });
+  }
+
+
+  delete(id: number): Observable<any> {
+    return this.http.delete(`${API}/appointments/${id}`);
   }
 
 }

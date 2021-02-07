@@ -25,7 +25,7 @@ export class AuthGuardService implements CanLoad {
         }),
         catchError(() => {
           this.router.navigate(['/']);
-          return of(false)
+          return of(false);
         })
       );
   }
