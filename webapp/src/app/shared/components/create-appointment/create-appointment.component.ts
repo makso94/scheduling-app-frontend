@@ -85,7 +85,6 @@ export class CreateAppointmentComponent implements OnInit, OnDestroy {
 
 
       this.refresh.next();
-      console.log(this.events);
     });
 
     this.form.valueChanges.subscribe(console.log);

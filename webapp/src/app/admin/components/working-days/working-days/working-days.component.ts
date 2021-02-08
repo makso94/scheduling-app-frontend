@@ -157,11 +157,6 @@ export class WorkingDaysComponent implements OnInit {
 
         });
       }
-
-
-
-
-
     }
 
   }

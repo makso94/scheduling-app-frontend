@@ -57,7 +57,7 @@
                         Password is required
                     </mat-error>
                     <mat-error *ngIf="form.controls.password.errors?.minlength">
-                        Password must be at least 3 characters
+                        Password must be at least 5 characters
                     </mat-error>
                 </mat-form-field>
 
@@ -78,16 +78,22 @@
                 </mat-form-field>
             </div>
 
-            <mat-checkbox *ngIf="canCreateNewAdmin" formControlName="is_admin" tabindex="6">
+            <mat-checkbox *ngIf="isAdmin" formControlName="is_admin" tabindex="6">
                 Administrator
             </mat-checkbox>
 
             <mat-card-actions>
-                <button  class="formSubmitBtn" type="submit" mat-raised-button color="primary" tabindex="7">Create
+                <button class="formSubmitBtn" type="submit" mat-raised-button color="primary" tabindex="7">Create
                     Account</button>
                 <span>or</span>
-                <a mat-raised-button [routerLink]="['/']" routerLinkActive="router-link-active">
+                <a *ngIf="!isAdmin" mat-raised-button [routerLink]="['/']"
+                    routerLinkActive="router-link-active">
                     <mat-icon>arrow_back</mat-icon> Back to LOGIN
+                </a>
+
+                <a *ngIf="isAdmin" mat-raised-button [routerLink]="['/admin/users']"
+                    routerLinkActive="router-link-active">
+                    <mat-icon>arrow_back</mat-icon> Back to Users
                 </a>
             </mat-card-actions>
         </form>

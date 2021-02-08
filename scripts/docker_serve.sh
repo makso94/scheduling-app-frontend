@@ -1,6 +1,6 @@
 #!/bin/bash
 # ------------------------------------------------------------------
-# [Toshe Mitev] Grunt serve from within docker container
+# [Mario Maksimovikj] Grunt serve from within docker container
 # ------------------------------------------------------------------
 
 VERSION=1.0.0

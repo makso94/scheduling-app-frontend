@@ -10,6 +10,8 @@ import {
   addHours,
   setHours,
   setMinutes,
+  getMonth,
+  getYear,
 } from 'date-fns';
 import { Subject } from 'rxjs';
 import {
@@ -22,6 +24,7 @@ import {
 import { roundToNearest } from 'angular-calendar/modules/common/util';
 import { format } from 'date-fns/esm';
 import { MatRippleModule } from '@angular/material/core';
+import { AppointmentsService } from 'src/app/shared/services/appointments.service';
 
 const colors: any = {
   red: {
@@ -47,8 +50,9 @@ export class WorkingDaysListComponent implements OnInit {
 
   @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any> | undefined;
 
-  constructor() {
-    console.log('WorkingDaysListComponent---------------------------------');
+  constructor(
+    private appointmentsService: AppointmentsService
+  ) {
   }
 
 
@@ -71,7 +75,6 @@ export class WorkingDaysListComponent implements OnInit {
       label: '<i class="fas fa-fw fa-pencil-alt"></i>',
       a11yLabel: 'Edit',
       onClick: ({ event }: { event: CalendarEvent }): void => {
-        this.handleEvent('Edited', event);
       },
     },
     {
@@ -79,66 +82,13 @@ export class WorkingDaysListComponent implements OnInit {
       a11yLabel: 'Delete',
       onClick: ({ event }: { event: CalendarEvent }): void => {
         this.events = this.events.filter((iEvent) => iEvent !== event);
-        this.handleEvent('Deleted', event);
       },
     },
   ];
 
   refresh: Subject<any> = new Subject();
 
-  events: CalendarEvent[] = [
-    {
-      start: setHours(startOfDay(new Date()), 16),
-      end: setHours(startOfDay(new Date()), 17),
-      title: 'Boris sisanje',
-    }, {
-      start: setHours(startOfDay(new Date()), 17),
-      end: setHours(startOfDay(new Date()), 18),
-      title: 'Mario sisanje',
-    }, {
-      start: setHours(startOfDay(new Date()), 18),
-      end: setHours(startOfDay(new Date()), 19),
-      title: 'Dejan sisanje',
-    }
-    // {
-    //   start: subDays(startOfDay(new Date()), 1),
-    //   end: addDays(new Date(), 1),
-    //   title: 'A 3 day event',
-    //   color: colors.red,
-    //   actions: this.actions,
-    //   allDay: true,
-    //   resizable: {
-    //     beforeStart: true,
-    //     afterEnd: true,
-    //   },
-    //   draggable: true,
-    // },
-    // {
-    //   start: startOfDay(new Date()),
-    //   title: 'An event with no end date',
-    //   color: colors.yellow,
-    //   actions: this.actions,
-    // },
-    // {
-    //   start: subDays(endOfMonth(new Date()), 3),
-    //   end: addDays(endOfMonth(new Date()), 3),
-    //   title: 'A long event that spans 2 months',
-    //   color: colors.blue,
-    //   allDay: true,
-    // },
-    // {
-    //   start: addHours(startOfDay(new Date()), 2),
-    //   end: addHours(new Date(), 2),
-    //   title: 'A draggable and resizable event',
-    //   color: colors.yellow,
-    //   actions: this.actions,
-    //   resizable: {
-    //     beforeStart: true,
-    //     afterEnd: true,
-    //   },
-    //   draggable: true,
-    // },
-  ];
+  events: CalendarEvent[] = [];
 
   activeDayIsOpen = true;
   selectedDays: any = [];
@@ -146,9 +96,33 @@ export class WorkingDaysListComponent implements OnInit {
 
 
   ngOnInit(): void {
-    console.log(
+    this.appointmentsService.getByMonthYear(getMonth((this.viewDate)) + 1, getYear(this.viewDate)).subscribe(res => {
+      res.data.forEach(day => {
+        this.selectedDays.push({
+          date: startOfDay(new Date(day.date)),
+          cssClass: 'cal-day-selected',
+          id: day.id
+        });
 
-    );
+        day.appointments.forEach(app => {
+          let finalTitle = '';
+          app.services.forEach(service => {
+            console.log(service.name);
+            !!finalTitle.length ?
+              finalTitle = finalTitle.concat(` | ${service.name}`) :
+              finalTitle = finalTitle.concat(`${service.name}`);
+          });
+          this.events.push({
+            start: app.start,
+            end: app.end,
+            title: finalTitle
+          });
+        });
+      });
+
+
+      this.refresh.next();
+    });
 
   }
 
@@ -170,28 +144,6 @@ export class WorkingDaysListComponent implements OnInit {
   }
 
 
-  eventTimesChanged({
-    event,
-    newStart,
-    newEnd,
-  }: CalendarEventTimesChangedEvent): void {
-    this.events = this.events.map((iEvent) => {
-      if (iEvent === event) {
-        return {
-          ...event,
-          start: newStart,
-          end: newEnd,
-        };
-      }
-      return iEvent;
-    });
-    this.handleEvent('Dropped or resized', event);
-  }
-
-  handleEvent(action: string, event: CalendarEvent): void {
-    this.modalData = { event, action };
-    // this.modal.open(this.modalContent, { size: 'lg' });
-  }
 
   addEvent(): void {
     this.events = [
@@ -210,9 +162,6 @@ export class WorkingDaysListComponent implements OnInit {
     ];
   }
 
-  deleteEvent(eventToDelete: CalendarEvent): void {
-    this.events = this.events.filter((event) => event !== eventToDelete);
-  }
 
   setView(view: CalendarView): void {
     this.view = view;

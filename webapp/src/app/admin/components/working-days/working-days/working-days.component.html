@@ -61,6 +61,6 @@
     </mat-card-content>
     <mat-card-actions>
         <button *ngIf="createMode" type="submit" mat-raised-button color="primary" (click)="submit()"
-            [disabled]="false">Create Month</button>
+            [disabled]="selectedDays.length == 0">Create Month</button>
     </mat-card-actions>
 </mat-card>
