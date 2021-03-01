@@ -14,12 +14,12 @@ const routes: Routes = [
     children: [
       {
         path: 'working-days',
-        component: WorkingDaysListComponent
-      },
-      {
-        path: 'working-days/create',
         component: WorkingDaysComponent
       },
+      // {
+      //   path: 'working-days/create',
+      //   component: WorkingDaysComponent
+      // },
       {
         path: 'users',
         component: UsersComponent

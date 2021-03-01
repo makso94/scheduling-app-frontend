@@ -20,6 +20,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatTabsModule } from '@angular/material/tabs';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 
 const materialModules = [
   CommonModule,
@@ -43,7 +44,8 @@ const materialModules = [
   NgxMaterialTimepickerModule,
   MatDialogModule,
   MatStepperModule,
-  MatTabsModule
+  MatTabsModule,
+  MatSnackBarModule
 ];
 
 @NgModule({

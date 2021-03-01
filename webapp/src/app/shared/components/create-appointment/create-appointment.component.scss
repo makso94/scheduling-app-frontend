@@ -19,7 +19,21 @@
 
 .mat-card {
   width: 1200px;
+  mat-selection-list {
+    padding: 16px 0;
+    width: 50%;
+  }
+  .mat-horizontal-content-container {
+    padding: 0 24px;
+  }
   #serviceSelector {
     width: 320px;
+  }
+  .stepperActions {
+    margin-top: 8px;
+    text-align: center;
+    > * {
+      margin: 0 8px;
+    }
   }
 }

@@ -11,14 +11,15 @@
                 <mat-step [editable]="true">
                     <ng-template matStepLabel>Select services</ng-template>
 
-                    <mat-form-field id="serviceSelector" appearance="outline">
-                        <mat-label>Select Services</mat-label>
-                        <mat-select formControlName="service_ids" multiple required>
-                            <mat-option *ngFor="let service of serviceList" [value]="service.id">{{service.name}}
-                                {{service.description? service.description: ''}} </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                    <div>
+                    <mat-selection-list (selectionChange)="selectionChanged($event)">
+                        <mat-list-option [value]="service.id" *ngFor="let service of serviceList">
+                            {{service.name}}
+                        </mat-list-option>
+                    </mat-selection-list>
+
+
+
+                    <div class="stepperActions">
                         <button type="button" mat-stroked-button matStepperNext>Next</button>
                     </div>
                 </mat-step>
@@ -29,25 +30,23 @@
                         <mat-grid-tile>
                             <ng-container *ngIf="view === CalendarView.Month">
                                 <button type="button" mat-raised-button color="primary" mwlCalendarPreviousView
-                                    [view]="view" [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()">
-                                    Previous
+                                    [view]="view" [(viewDate)]="viewDate" (viewDateChange)="onViewDateChange()">
+                                    <mat-icon>chevron_left</mat-icon>
                                 </button>
                                 <button type="button" mat-stroked-button color="primary" mwlCalendarToday
-                                    [(viewDate)]="viewDate">
-                                    Current
+                                    [(viewDate)]="viewDate" (viewDateChange)="onViewDateChange()">
+                                    Today
                                 </button>
                                 <button type="button" mat-raised-button color="primary" mwlCalendarNextView
-                                    [view]="view" [(viewDate)]="viewDate" (viewDateChange)="closeOpenMonthViewDay()">
-                                    Next
+                                    [view]="view" [(viewDate)]="viewDate" (viewDateChange)="onViewDateChange()">
+                                    <mat-icon>chevron_right</mat-icon>
                                 </button>
                             </ng-container>
-                            <mat-button-toggle-group>
-                                <mat-button-toggle color="primary" [checked]="view === CalendarView.Month"
-                                    (click)="setView(CalendarView.Month)">
-                                    Back to Month view
-                                </mat-button-toggle>
+                            <button *ngIf="view === CalendarView.Day" mat-raised-button color="primary"
+                                (click)="setView(CalendarView.Month)">
+                                Back to Month view
+                            </button>
 
-                            </mat-button-toggle-group>
                         </mat-grid-tile>
                         <mat-grid-tile>
                             <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
@@ -66,14 +65,14 @@
                         </mwl-calendar-month-view>
 
                         <mwl-calendar-day-view *ngSwitchCase="CalendarView.Day" [viewDate]="viewDate" [events]="events"
-                            [refresh]="refresh" [hourSegments]="4" [dayStartHour]="9" [dayEndHour]="19"
-                            (hourSegmentClicked)="slotClicked($event.date) ">
+                            [refresh]="refresh" [hourSegments]="4" [dayStartHour]="dayStartHour"
+                            [dayEndHour]="dayEndHour" (hourSegmentClicked)="slotClicked($event.date) ">
                         </mwl-calendar-day-view>
 
                     </div>
 
 
-                    <div>
+                    <div class="stepperActions">
                         <button type="button" mat-stroked-button matStepperPrevious>Back</button>
                         <button type="button" mat-stroked-button matStepperNext>Next</button>
                     </div>
@@ -81,7 +80,7 @@
                 <mat-step>
                     <ng-template matStepLabel>Done</ng-template>
                     <p>You are now done.</p>
-                    <div>
+                    <div class="stepperActions">
                         <button type="button" mat-stroked-button matStepperPrevious>Back</button>
                         <button type="button" mat-stroked-button (click)="stepper.reset()">Reset</button>
                         <button type="submit" mat-raised-button color="primary" [disabled]="form.invalid"

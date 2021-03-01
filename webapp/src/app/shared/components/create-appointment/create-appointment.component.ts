@@ -1,10 +1,15 @@
-import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { formatDate } from '@angular/common';
+import { Component, EventEmitter, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSelectionListChange } from '@angular/material/list';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatHorizontalStepper } from '@angular/material/stepper';
-import { CalendarEvent, CalendarMonthViewDay, CalendarView, CalendarWeekViewBeforeRenderEvent } from 'angular-calendar';
-import { format, formatISO, getMonth, getYear, startOfDay } from 'date-fns';
+import { CalendarEvent, CalendarMonthViewDay, CalendarView, CalendarWeekViewBeforeRenderEvent, DateFormatterParams } from 'angular-calendar';
+import { format, formatISO, getHours, getMonth, getTime, getYear, startOfDay } from 'date-fns';
+import { find, isNil } from 'lodash';
 import { Subject, Subscription } from 'rxjs';
-import { WorkingDay } from 'src/app/admin/components/working-days/models/working-days-model';
+import { WorkingDay, WorkingDaysWithAppointments } from 'src/app/admin/components/working-days/models/working-days-model';
+import { WorkingDaysService } from 'src/app/admin/components/working-days/services/working-days.service';
 import { ServiceData } from 'src/app/admin/models/services.models';
 import { ServicesService } from 'src/app/admin/services/services.service';
 import { AuthService } from 'src/app/auth/services/auth.service';
@@ -35,7 +40,10 @@ export class CreateAppointmentComponent implements OnInit, OnDestroy {
   events: CalendarEvent[] = [];
   refresh: Subject<any> = new Subject();
   CalendarView = CalendarView;
-  selectedDays: Array<WorkingDay> = [];
+  workingDays: Array<WorkingDay> = [];
+  rawDays: Array<WorkingDaysWithAppointments> = [];
+  dayStartHour = 9;
+  dayEndHour = 17;
 
   // Subscriptions
   ServiceSubs!: Subscription;
@@ -46,7 +54,8 @@ export class CreateAppointmentComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private appointmentsService: AppointmentsService,
     public servicesService: ServicesService,
-    private authService: AuthService
+    private authService: AuthService,
+    private _snackBar: MatSnackBar
   ) { }
 
 
@@ -59,9 +68,27 @@ export class CreateAppointmentComponent implements OnInit, OnDestroy {
       this.form.get('user_id')?.setValue(user.id);
     });
 
+    this.getAppointments();
+
+    this.form.valueChanges.subscribe(console.log);
+
+
+  }
+  ngOnDestroy(): void {
+    this.UserSubs.unsubscribe();
+    this.ServiceSubs.unsubscribe();
+  }
+  selectionChanged(event: MatSelectionListChange): void {
+    // console.log(event.source._value);
+    this.form.get('service_ids')?.setValue(event.source._value);
+  }
+
+  getAppointments(): void {
+    this.events = [];
     this.appointmentsService.getByMonthYear(getMonth((this.viewDate)) + 1, getYear(this.viewDate)).subscribe(res => {
+      this.rawDays = res.data;
       res.data.forEach(day => {
-        this.selectedDays.push({
+        this.workingDays.push({
           date: startOfDay(new Date(day.date)),
           cssClass: 'cal-day-selected',
           id: day.id
@@ -70,7 +97,6 @@ export class CreateAppointmentComponent implements OnInit, OnDestroy {
         day.appointments.forEach(app => {
           let finalTitle = '';
           app.services.forEach(service => {
-            console.log(service.name);
             !!finalTitle.length ?
               finalTitle = finalTitle.concat(` | ${service.name}`) :
               finalTitle = finalTitle.concat(`${service.name}`);
@@ -86,17 +112,7 @@ export class CreateAppointmentComponent implements OnInit, OnDestroy {
 
       this.refresh.next();
     });
-
-    this.form.valueChanges.subscribe(console.log);
-
-
   }
-  ngOnDestroy(): void {
-    this.UserSubs.unsubscribe();
-    this.ServiceSubs.unsubscribe();
-  }
-
-
 
   create(): void {
     this.appointmentsService.create(this.form.value).subscribe(res => {
@@ -107,21 +123,28 @@ export class CreateAppointmentComponent implements OnInit, OnDestroy {
 
 
   changeDay(event: any): void {
-    console.log(event);
+    if (event.day.isPast) {
+      this._snackBar.open(`You can not make an appointment in past.`, 'Close', { verticalPosition: 'top', duration: 2000 });
+      return;
+    }
+
     if (event.day.meta?.workingDayId) {
+      const findedDay = find(this.rawDays, { id: event.day.meta.workingDayId });
+      if (isNil(findedDay)) { return; }
+      this.dayStartHour = getHours(new Date(findedDay?.opens));
+      this.dayEndHour = getHours(new Date(findedDay?.closes));
+
       this.form.get('working_day_id')?.setValue(event.day.meta.workingDayId);
       this.viewDate = event.day.date;
       this.view = CalendarView.Day;
     }
-    else if (event.day.isPast) {
-      window.alert(`You can not make an appointment in past.`);
-
-    }
     else {
-      window.alert(`You can not make an appointment for this day.`);
+      this._snackBar.open(`You can not make an appointment for this day.`, 'Close', { verticalPosition: 'top', duration: 2000 });
     }
   }
-
+  onViewDateChange(): void {
+    this.getAppointments();
+  }
 
   setView(view: CalendarView): void {
     this.view = view;
@@ -142,9 +165,9 @@ export class CreateAppointmentComponent implements OnInit, OnDestroy {
 
     body.forEach((day) => {
       if (day.date.getMonth() === this.viewDate.getMonth()) {
-        let tmpDay = new WorkingDay;
+        let tmpDay = new WorkingDay();
         if (
-          this.selectedDays.some(
+          this.workingDays.some(
             (selectedDay: WorkingDay) => {
               tmpDay = selectedDay;
               return selectedDay.date?.getTime() === day.date.getTime();
@@ -161,7 +184,6 @@ export class CreateAppointmentComponent implements OnInit, OnDestroy {
       }
     });
   }
-
 
 
 }
