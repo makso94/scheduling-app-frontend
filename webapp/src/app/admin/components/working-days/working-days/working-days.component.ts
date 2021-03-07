@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { CalendarView, CalendarMonthViewDay, CalendarEvent } from 'angular-calendar';
 import { format, getDaysInMonth, startOfDay } from 'date-fns';
@@ -9,6 +9,7 @@ import { Legend } from 'src/app/shared/components/generic-legend/generic-legend.
 import { EditWorkingDayDialogComponent } from '../edit-working-day-dialog/edit-working-day-dialog.component';
 import { RequestWorkingDays } from '../models/working-days-model';
 import { WorkingDaysService } from '../services/working-days.service';
+import { compareDateTime } from 'src/app/shared/validators/form-validators';
 
 @Component({
   selector: 'app-working-days',
@@ -17,8 +18,13 @@ import { WorkingDaysService } from '../services/working-days.service';
   encapsulation: ViewEncapsulation.None
 })
 export class WorkingDaysComponent implements OnInit {
-  openAtControl = new FormControl('09:00');
-  closeAtControl = new FormControl('19:00');
+  form = this.fb.group({
+    opens: ['09:00', Validators.required],
+    closes: ['19:00', Validators.required]
+  }, {
+    validators: compareDateTime
+  });
+
   year!: number;
   month!: number;
   view: CalendarView = CalendarView.Month;
@@ -37,13 +43,19 @@ export class WorkingDaysComponent implements OnInit {
   constructor(
     private workingDaysService: WorkingDaysService,
     private dialog: MatDialog,
-    private appointmentsService: AppointmentsService
+    private appointmentsService: AppointmentsService,
+    private fb: FormBuilder
   ) { }
 
   ngOnInit(): void {
     this.year = this.viewDate.getFullYear();
     this.month = this.viewDate.getMonth() + 1;
     this.getMonthYearData();
+    this.form.valueChanges.subscribe(res => {
+      console.log(res, this.form.valid);
+
+
+    });
   }
 
   getMonthYearData(): void {
@@ -53,8 +65,6 @@ export class WorkingDaysComponent implements OnInit {
 
     this.workingDaysService.get(this.year, this.month).subscribe(
       res => {
-        console.log(res);
-
         if (res?.data.length === 0) {
           this.createMode = true;
           this.refresh.next();
@@ -213,8 +223,8 @@ export class WorkingDaysComponent implements OnInit {
     const req = new RequestWorkingDays();
     req.year = this.year;
     req.month = this.month;
-    req.opens = this.openAtControl.value;
-    req.closes = this.closeAtControl.value;
+    req.opens = this.form.get('opens')?.value;
+    req.closes = this.form.get('closes')?.value;
     this.selectedDays.forEach(day => {
       req.days.push(day.date.getDate());
     });

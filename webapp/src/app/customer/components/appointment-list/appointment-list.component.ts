@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { isFuture } from 'date-fns';
+import { orderBy, sortBy } from 'lodash';
 import { User } from 'src/app/auth/models/user.model';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { AppointmentsService } from 'src/app/shared/services/appointments.service';
@@ -30,6 +31,8 @@ export class AppointmentListComponent implements OnInit {
       res => {
         this.upComingApp = res.data.filter((app: any) => isFuture(new Date(app.start)));
         this.pastApp = res.data.filter((app: any) => !isFuture(new Date(app.start)));
+        this.upComingApp = orderBy(this.upComingApp, 'start', 'asc')
+        this.pastApp = orderBy(this.pastApp, 'start', 'desc')
       });
   }
 

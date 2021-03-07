@@ -4,16 +4,17 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSelectionListChange } from '@angular/material/list';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatHorizontalStepper } from '@angular/material/stepper';
-import { CalendarEvent, CalendarMonthViewDay, CalendarView, CalendarWeekViewBeforeRenderEvent, DateFormatterParams } from 'angular-calendar';
-import { format, formatISO, getHours, getMonth, getTime, getYear, startOfDay } from 'date-fns';
-import { find, isNil } from 'lodash';
+import { CalendarEvent, CalendarMonthViewDay, CalendarView, CalendarWeekViewBeforeRenderEvent } from 'angular-calendar';
+import { addHours, addMinutes, format, getHours, getMonth, getTime, getYear, isWithinInterval, startOfDay } from 'date-fns';
+import { find, includes, isNil } from 'lodash';
 import { Subject, Subscription } from 'rxjs';
 import { WorkingDay, WorkingDaysWithAppointments } from 'src/app/admin/components/working-days/models/working-days-model';
-import { WorkingDaysService } from 'src/app/admin/components/working-days/services/working-days.service';
 import { ServiceData } from 'src/app/admin/models/services.models';
 import { ServicesService } from 'src/app/admin/services/services.service';
 import { AuthService } from 'src/app/auth/services/auth.service';
 import { AppointmentsService } from '../../services/appointments.service';
+import { WeekViewHourColumn } from 'calendar-utils';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -33,17 +34,21 @@ export class CreateAppointmentComponent implements OnInit, OnDestroy {
   });
 
   serviceList!: Array<ServiceData>;
-
+  selectedServices: ServiceData[] = [];
   // Calendar variables
   view: CalendarView = CalendarView.Month;
+  CalendarView = CalendarView;
   viewDate: Date = new Date();
   events: CalendarEvent[] = [];
   refresh: Subject<any> = new Subject();
-  CalendarView = CalendarView;
   workingDays: Array<WorkingDay> = [];
   rawDays: Array<WorkingDaysWithAppointments> = [];
   dayStartHour = 9;
   dayEndHour = 17;
+  totalDuration = 0;
+  hourColumns!: WeekViewHourColumn[];
+  selectedDayViewDate!: Date;
+  daySlots: Date[] = [];
 
   // Subscriptions
   ServiceSubs!: Subscription;
@@ -55,7 +60,8 @@ export class CreateAppointmentComponent implements OnInit, OnDestroy {
     private appointmentsService: AppointmentsService,
     public servicesService: ServicesService,
     private authService: AuthService,
-    private _snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router
   ) { }
 
 
@@ -70,7 +76,17 @@ export class CreateAppointmentComponent implements OnInit, OnDestroy {
 
     this.getAppointments();
 
-    this.form.valueChanges.subscribe(console.log);
+    this.form.valueChanges.subscribe(res => {
+      // console.log(res);
+      if (isNil(res.service_ids)) {
+        return;
+      }
+      this.selectedServices = [];
+      res.service_ids.forEach((sId: number) => {
+        this.selectedServices.push(find(this.serviceList, { id: sId }) || new ServiceData());
+      });
+
+    });
 
 
   }
@@ -79,7 +95,13 @@ export class CreateAppointmentComponent implements OnInit, OnDestroy {
     this.ServiceSubs.unsubscribe();
   }
   selectionChanged(event: MatSelectionListChange): void {
-    // console.log(event.source._value);
+    this.totalDuration = 0;
+    event.source._value?.forEach(element => {
+      const findedService: any = find(this.serviceList, { id: element });
+      this.totalDuration += findedService?.duration;
+
+    });
+
     this.form.get('service_ids')?.setValue(event.source._value);
   }
 
@@ -116,15 +138,17 @@ export class CreateAppointmentComponent implements OnInit, OnDestroy {
 
   create(): void {
     this.appointmentsService.create(this.form.value).subscribe(res => {
-      console.log(res);
+      this.router.navigate([`/customer/appointments`]);
     });
   }
 
 
 
   changeDay(event: any): void {
-    if (event.day.isPast) {
-      this._snackBar.open(`You can not make an appointment in past.`, 'Close', { verticalPosition: 'top', duration: 2000 });
+    console.log(event);
+
+    if (event.day.isPast || event.day.isToday) {
+      this.snackBar.open(`Unable to make an appointment in past.`, 'Close', { verticalPosition: 'top', duration: 2000 });
       return;
     }
 
@@ -139,7 +163,7 @@ export class CreateAppointmentComponent implements OnInit, OnDestroy {
       this.view = CalendarView.Day;
     }
     else {
-      this._snackBar.open(`You can not make an appointment for this day.`, 'Close', { verticalPosition: 'top', duration: 2000 });
+      this.snackBar.open(`Unable to make an appointment for this day.`, 'Close', { verticalPosition: 'top', duration: 2000 });
     }
   }
   onViewDateChange(): void {
@@ -154,8 +178,15 @@ export class CreateAppointmentComponent implements OnInit, OnDestroy {
     // this.activeDayIsOpen = false;
   }
 
-  slotClicked(dateTime: Date): void {
-    this.form.get('start')?.setValue(format(dateTime, `Y-MM-dd HH:mm:ss`));
+  slotClicked(date: Date): void {
+    if (!includes(this.daySlots, date)) {
+      this.snackBar.open(
+        `Unable to make an appointment at this time slot.`,
+        'Close',
+        { verticalPosition: 'top', duration: 2000 });
+      return;
+    }
+    this.form.get('start')?.setValue(format(date, `Y-MM-dd HH:mm:ss`));
     this.stepper.next();
   }
 
@@ -185,5 +216,51 @@ export class CreateAppointmentComponent implements OnInit, OnDestroy {
     });
   }
 
+  beforeDayViewRender(event: CalendarWeekViewBeforeRenderEvent): void {
+    this.daySlots = [];
+    this.hourColumns = event.hourColumns;
+    this.addSelectedDayViewClass();
+    this.refresh.next();
+  }
+
+  private addSelectedDayViewClass(): void {
+    this.hourColumns.forEach((column) => {
+      column.hours.forEach((hourSegment) => {
+        hourSegment.segments.forEach((segment) => {
+          delete segment.cssClass;
+          const appEndDate = addMinutes(segment.date.getTime(), this.totalDuration).getTime();
+          if (
+            (appEndDate <= addHours(column.date, this.dayEndHour + 1).getTime()) &&
+            !this.checkIsInEvents(column.events, segment.date)
+          ) {
+            this.daySlots.push(segment.date);
+            segment.cssClass = 'cal-day-selected';
+          }
+        });
+      });
+    });
+
+  }
+
+  private checkIsInEvents(events: any[], segmentDate: Date): boolean {
+    let result = false;
+    events.forEach(element => {
+      if (
+        isWithinInterval(addMinutes(segmentDate, 1), { start: element.event.start, end: element.event.end })
+        // (isWithinInterval(addMinutes(segmentDate, this.totalDuration + 1), { start: element.event.start, end: element.event.end }))
+        || (
+          segmentDate.getTime() < element.event.start.getTime() &&
+          (addMinutes(segmentDate, this.totalDuration).getTime() > element.event.start.getTime()))
+      ) {
+        result = true;
+        return;
+      }
+    });
+    return result;
+  }
+
+  stepperChanged(event: any): void {
+    this.view = CalendarView.Month;
+  }
 
 }

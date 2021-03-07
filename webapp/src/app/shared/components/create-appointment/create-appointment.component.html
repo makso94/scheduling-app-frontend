@@ -7,13 +7,13 @@
 
         <mat-card-content>
 
-            <mat-horizontal-stepper linear #stepper>
-                <mat-step [editable]="true">
+            <mat-horizontal-stepper linear #stepper (selectionChange)="stepperChanged($event)">
+                <mat-step [stepControl]="form.controls.service_ids" [editable]="true">
                     <ng-template matStepLabel>Select services</ng-template>
 
                     <mat-selection-list (selectionChange)="selectionChanged($event)">
                         <mat-list-option [value]="service.id" *ngFor="let service of serviceList">
-                            {{service.name}}
+                            {{service.name }} - {{service.duration}} min
                         </mat-list-option>
                     </mat-selection-list>
 
@@ -23,7 +23,7 @@
                         <button type="button" mat-stroked-button matStepperNext>Next</button>
                     </div>
                 </mat-step>
-                <mat-step [editable]="true">
+                <mat-step [stepControl]="form.controls.start" [editable]="true">
                     <ng-template matStepLabel>Pick date from Calendar</ng-template>
 
                     <mat-grid-list cols="3" rowHeight="4:1">
@@ -49,11 +49,14 @@
 
                         </mat-grid-tile>
                         <mat-grid-tile>
-                            <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+                            <h3><strong>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</strong></h3>
 
                         </mat-grid-tile>
                         <mat-grid-tile>
-
+                            <mat-chip-list>
+                                Appointment duration:
+                                <mat-chip color="primary" selected>{{totalDuration}} min</mat-chip>
+                            </mat-chip-list>
                         </mat-grid-tile>
                     </mat-grid-list>
 
@@ -66,7 +69,9 @@
 
                         <mwl-calendar-day-view *ngSwitchCase="CalendarView.Day" [viewDate]="viewDate" [events]="events"
                             [refresh]="refresh" [hourSegments]="4" [dayStartHour]="dayStartHour"
-                            [dayEndHour]="dayEndHour" (hourSegmentClicked)="slotClicked($event.date) ">
+                            [dayEndHour]="dayEndHour" (hourSegmentClicked)="slotClicked($event.date) "
+                            (beforeViewRender)="beforeDayViewRender($event)">
+                            >
                         </mwl-calendar-day-view>
 
                     </div>
@@ -79,10 +84,23 @@
                 </mat-step>
                 <mat-step>
                     <ng-template matStepLabel>Done</ng-template>
-                    <p>You are now done.</p>
+                    <mat-card class="appointmentCard">
+                        <mat-card-header>
+                            <mat-card-title>
+                                <h3>Check the following information, then create the appointment.</h3>
+                                {{form.get('start')?.value}}
+                            </mat-card-title>
+                        </mat-card-header>
+                        <mat-card-content>
+                            <mat-chip-list>
+                                <mat-chip *ngFor="let service of selectedServices"> {{service.name}} -
+                                    {{service.duration}} min</mat-chip>
+                            </mat-chip-list>
+                        </mat-card-content>
+                    </mat-card>
                     <div class="stepperActions">
                         <button type="button" mat-stroked-button matStepperPrevious>Back</button>
-                        <button type="button" mat-stroked-button (click)="stepper.reset()">Reset</button>
+                        <!-- <button type="button" mat-stroked-button (click)="resetStepper()">Reset</button> -->
                         <button type="submit" mat-raised-button color="primary" [disabled]="form.invalid"
                             (click)="create()">Create
                             Appointment</button>

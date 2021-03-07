@@ -3,12 +3,11 @@
         <mat-card-title>
             <span *ngIf="createMode">Create Working Month</span>
             <span *ngIf="!createMode">Edit Working Month</span>
-            </mat-card-title>
+        </mat-card-title>
     </mat-card-header>
     <mat-card-content>
 
         <section class="monthActions">
-
             <div>
                 <button type="button" mat-raised-button color="primary" mwlCalendarPreviousView [view]="view"
                     [(viewDate)]="viewDate" (viewDateChange)="onViewDateChange()">
@@ -28,31 +27,41 @@
 
         </section>
 
+        <form [formGroup]="form">
+            <section class="workTimeSection" *ngIf="createMode">
+                <h3>Work time </h3>
 
-        <section *ngIf="createMode" class="workTimeSection">
-            <h2>Work time </h2>
+                <mat-form-field appearance="outline">
+                    <mat-label>Open at</mat-label>
+                    <input matInput [format]="24" [ngxTimepicker]="openAt" formControlName="opens" readonly>
+                    <ngx-material-timepicker #openAt [minutesGap]="15">
+                    </ngx-material-timepicker>
+                    <mat-error *ngIf="form.controls.opens.errors?.required && (form.dirty || form.touched)">
+                        Field is required
+                    </mat-error>
+                </mat-form-field>
 
-            <mat-form-field appearance="outline">
-                <mat-label>Open at</mat-label>
-                <input matInput [format]="24" [ngxTimepicker]="openAt" [formControl]="openAtControl" readonly>
-                <ngx-material-timepicker #openAt [minutesGap]="15">
-                </ngx-material-timepicker>
-            </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Close at</mat-label>
+                    <input matInput [format]="24" [ngxTimepicker]="closeAt" formControlName="closes" readonly>
+                    <ngx-material-timepicker #closeAt [minutesGap]="15">
+                    </ngx-material-timepicker>
+                    <mat-error *ngIf="form.controls.closes.errors?.required && (form.dirty || form.touched)">
+                        Field is required
+                    </mat-error>
+                </mat-form-field>
 
-            <mat-form-field appearance="outline">
-                <mat-label>Close at</mat-label>
-                <input matInput [format]="24" [ngxTimepicker]="closeAt" [formControl]="closeAtControl" readonly>
-                <ngx-material-timepicker #closeAt [minutesGap]="15">
-                </ngx-material-timepicker>
-            </mat-form-field>
+                <button mat-stroked-button color="primary" type="button" (click)="selectWholeMonth()">Select Whole
+                    Month</button>
+                <button mat-stroked-button type="button" (click)="deselectWholeMonth()">Deselect Whole
+                    Month</button>
 
+                <mat-error *ngIf="form.errors?.compareDateTime && (form.touched || form.dirty)">
+                    Close at must be greather than open at
+                </mat-error>
+            </section>
+        </form>
 
-            <button mat-stroked-button color="primary" type="button" (click)="selectWholeMonth()">Select Whole
-                Month</button>
-            <button mat-stroked-button type="button" (click)="deselectWholeMonth()">Deselect Whole
-                Month</button>
-
-        </section>
 
 
 
@@ -63,6 +72,6 @@
     </mat-card-content>
     <mat-card-actions>
         <button *ngIf="createMode" type="submit" mat-raised-button color="primary" (click)="submit()"
-            [disabled]="selectedDays.length == 0">Create Month</button>
+            [disabled]="(selectedDays.length === 0) || form.invalid">Create Month</button>
     </mat-card-actions>
 </mat-card>

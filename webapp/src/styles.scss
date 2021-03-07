@@ -79,5 +79,19 @@ app-user-not-approved {
 }
 
 .link {
-  min-width: 160px;
+  min-width: 160px !important;
+}
+
+.cal-day-selected {
+  background-color: rgba(40, 167, 69, 0.5) !important;
+}
+.cal-day-selected:hover {
+  background-color: rgba(40, 167, 69, 1) !important;
+}
+
+.cal-day-not-selected {
+  background-color: rgba(220, 53, 69, 0.5) !important;
+}
+.cal-day-not-selected:hover {
+  background-color: rgba(220, 53, 69, 01) !important;
 }
